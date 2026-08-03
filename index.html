@@ -1,43 +1,135 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="css/style.css" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/style.css">
     <title>EngineerOS</title>
-  </head>
-  <body>
-    <header>
-      <div class="logo">
-        <h1>🚀 EngineerOS</h1>
-      </div>
+</head>
+<body>
 
-      <nav>
-        <a href="#">Dashboard</a>
+<header class="header">
+
+    <div class="logo">
+
+        <span class="logo-icon">🚀</span>
+
+        <h1>
+            Engineer<span class="accent">OS</span>
+        </h1>
+
+    </div>
+
+    <nav class="nav">
+
+        <a href="#" class="active">Dashboard</a>
         <a href="#">Projects</a>
         <a href="#">DSA</a>
         <a href="#">Roadmap</a>
         <a href="#">Community</a>
-      </nav>
 
-      <div class="user-info">
-        <h2>👋 Welcome back, Fazal</h2>
-        <p>Level 3 Engineer • 🔥 15-Day Streak</p>
-      </div>
-    </header>
+    </nav>
 
-    <main>
-      <section>
-        <h2>My Progress</h2>
-      </section>
+    <div class="header-actions">
 
-      <section>
-        <h2>Current Mission</h2>
-      </section>
+        <div class="search-box">
 
-      <section>
-        <h2>Recent Achievement</h2>
-      </section>
-    </main>
-  </body>
+            <span class="search-icon">🔍</span>
+
+            <input
+                type="text"
+                placeholder="Search..."
+            >
+
+            <span class="shortcut">Ctrl + K</span>
+
+        </div>
+
+        <button class="notification-btn">
+            🔔
+        </button>
+
+        <button class="profile-btn">
+
+            <span>Fazal</span>
+
+            <span>👤</span>
+
+        </button>
+
+    </div>
+
+</header>
+
+<main class="main">
+
+    <section class="hero">
+
+        <div class="hero-content">
+
+            <h2>👋 Good Evening, Fazal</h2>
+
+            <p>
+                Keep building. Every commit counts.
+            </p>
+
+        </div>
+
+        <div class="stats">
+
+            <div class="stat-card orange">
+
+                <div class="card-top"></div>
+
+                <span class="emoji">🔥</span>
+
+                <h3>15</h3>
+
+                <p>Coding Streak</p>
+
+            </div>
+
+            <div class="stat-card blue">
+
+                <div class="card-top"></div>
+
+                <span class="emoji">🧩</span>
+
+                <h3>57</h3>
+
+                <p>DSA Solved</p>
+
+            </div>
+
+            <div class="stat-card purple">
+
+                <div class="card-top"></div>
+
+                <span class="emoji">💻</span>
+
+                <h3>1</h3>
+
+                <p>Active Project</p>
+
+            </div>
+
+            <div class="stat-card green">
+
+                <div class="card-top"></div>
+
+                <span class="emoji">⏱</span>
+
+                <h3>18h</h3>
+
+                <p>This Week</p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+</body>
 </html>
