@@ -1,139 +1,130 @@
 <!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/style.css">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="css/style.css" />
     <title>EngineerOS</title>
-</head>
-<body>
-
-<header class="header">
-
-    <div class="logo">
-
+  </head>
+  <body>
+    <header class="header">
+      <div class="logo">
         <span class="logo-icon">🚀</span>
 
-        <h1>
-            Engineer<span class="accent">OS</span>
-        </h1>
+        <h1>Engineer<span class="accent">OS</span></h1>
+      </div>
 
-    </div>
-
-    <nav class="nav">
-
+      <nav class="nav">
         <a href="#" class="active">Dashboard</a>
         <a href="#">Projects</a>
         <a href="#">DSA</a>
         <a href="#">Roadmap</a>
         <a href="#">Community</a>
+      </nav>
 
-    </nav>
-
-    <div class="header-actions">
-
+      <div class="header-actions">
         <div class="search-box">
+          <span class="search-icon">🔍</span>
 
-            <span class="search-icon">🔍</span>
+          <input type="text" placeholder="Search..." />
 
-            <input
-                type="text"
-                placeholder="Search..."
-            >
-
-            <span class="shortcut">Ctrl + K</span>
-
+          <span class="shortcut">Ctrl + K</span>
         </div>
 
-        <button class="notification-btn">
-            🔔
-        </button>
+        <button class="notification-btn">🔔</button>
 
         <button class="profile-btn">
+          <span>Fazal</span>
 
-            <span>Fazal</span>
-
-            <span>👤</span>
-
+          <span>👤</span>
         </button>
+      </div>
+    </header>
 
-    </div>
-
-</header>
-
-<main class="main">
-
-    <section class="hero">
-
+    <main class="main">
+      <section class="hero">
         <div class="hero-container">
+          <div class="hero-content">
+            <h2>👋 Good Evening, Fazal</h2>
 
-            <div class="hero-content">
+            <p>Keep building. Every commit counts.</p>
+          </div>
 
-                <h2>👋 Good Evening, Fazal</h2>
+          <div class="stats">
+            <div class="stat-card orange">
+              <div class="card-top"></div>
 
-                <p>
-                    Keep building. Every commit counts.
-                </p>
+              <span class="emoji">🔥</span>
 
+              <h3>15</h3>
+
+              <p>Coding Streak</p>
             </div>
 
-            <div class="stats">
+            <div class="stat-card blue">
+              <div class="card-top"></div>
 
-                <div class="stat-card orange">
+              <span class="emoji">🧩</span>
 
-                    <div class="card-top"></div>
+              <h3>57</h3>
 
-                    <span class="emoji">🔥</span>
-
-                    <h3>15</h3>
-
-                    <p>Coding Streak</p>
-
-                </div>
-
-                <div class="stat-card blue">
-
-                    <div class="card-top"></div>
-
-                    <span class="emoji">🧩</span>
-
-                    <h3>57</h3>
-
-                    <p>DSA Solved</p>
-
-                </div>
-
-                <div class="stat-card purple">
-
-                    <div class="card-top"></div>
-
-                    <span class="emoji">💻</span>
-
-                    <h3>1</h3>
-
-                    <p>Active Project</p>
-
-                </div>
-
-                <div class="stat-card green">
-
-                    <div class="card-top"></div>
-
-                    <span class="emoji">⏱</span>
-
-                    <h3>18h</h3>
-
-                    <p>This Week</p>
-
-                </div>
-
+              <p>DSA Solved</p>
             </div>
 
+            <div class="stat-card purple">
+              <div class="card-top"></div>
+
+              <span class="emoji">💻</span>
+
+              <h3>1</h3>
+
+              <p>Active Project</p>
+            </div>
+
+            <div class="stat-card green">
+              <div class="card-top"></div>
+
+              <span class="emoji">⏱</span>
+
+              <h3>18h</h3>
+
+              <p>This Week</p>
+            </div>
+          </div>
         </div>
+      </section>
 
-    </section>
+      <section class="today-mission">
+        <div class="today-mission-container">
+          <header class="mission-header">
+            <h2>🎯 Today's Mission</h2>
 
-</main>
+            <p>Focus on what matters most today.</p>
+          </header>
 
-</body>
+          <ul class="mission-list">
+            <li class="mission-card">
+              <label class="mission-label">
+                <input type="checkbox" />
+
+                <div class="mission-content">
+                  <span class="mission-label-text"> TODAY'S FOCUS </span>
+
+                  <h3>2 Binary Search Problems</h3>
+
+                  <div class="mission-meta">
+                    <span class="meta-tag practice"> 🧩 Practice </span>
+
+                    <span class="meta-tag high"> 🔴 High </span>
+
+                    <span class="meta-tag time"> ⏱ 40 min </span>
+                  </div>
+                </div>
+              </label>
+            </li>
+          </ul>
+        </div>
+      </section>
+    </main>
+  </body>
 </html>
