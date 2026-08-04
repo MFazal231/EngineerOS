@@ -775,6 +775,30 @@ body{
 
 }
 
+/* ========================= */
+/* COMPLETED MISSION */
+/* ========================= */
+
+.completed{
+
+    background:#f8fffb;
+
+}
+
+.completed h3{
+
+    text-decoration:line-through;
+
+    color:var(--text-light);
+
+}
+
+.completed .mission-label-text{
+
+    color:var(--green);
+
+}
+
 button:focus-visible,
 input:focus-visible{
 
