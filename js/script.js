@@ -1,9 +1,30 @@
+// =========================
+// CONSTANTS
+// =========================
+
+const STORAGE_KEY = "missionStates";
+
+
+// =========================
+// ELEMENTS
+// =========================
+
 const checkboxes = document.querySelectorAll(
     '.mission-label input[type="checkbox"]'
 );
 
-const progressText = document.querySelector(".progress-header span");
-const progressFill = document.querySelector(".progress-fill");
+const progressText = document.querySelector(
+    ".progress-header span"
+);
+
+const progressFill = document.querySelector(
+    ".progress-fill"
+);
+
+
+// =========================
+// FUNCTIONS
+// =========================
 
 function updateProgress() {
 
@@ -16,16 +37,75 @@ function updateProgress() {
     progressText.textContent =
         `${completedMissions} / ${totalMissions} Completed`;
 
-    const percentage = (completedMissions / totalMissions) * 100;
+    progressFill.style.width =
+        `${(completedMissions / totalMissions) * 100}%`;
 
-    progressFill.style.width = `${percentage}%`;
 }
+
+
+function saveProgress() {
+
+    const missionStates = [];
+
+    for (const checkbox of checkboxes) {
+
+        missionStates.push(checkbox.checked);
+
+    }
+
+    localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify(missionStates)
+    );
+
+}
+
+
+function loadProgress() {
+
+    const savedProgress = localStorage.getItem(
+        STORAGE_KEY
+    );
+
+    if (!savedProgress) {
+
+        updateProgress();
+
+        return;
+
+    }
+
+    const missionStates = JSON.parse(savedProgress);
+
+    for (let i = 0; i < checkboxes.length; i++) {
+
+        checkboxes[i].checked = missionStates[i];
+
+        const missionCard =
+            checkboxes[i].closest(".mission-card");
+
+        missionCard.classList.toggle(
+            "completed",
+            missionStates[i]
+        );
+
+    }
+
+    updateProgress();
+
+}
+
+
+// =========================
+// EVENTS
+// =========================
 
 for (const checkbox of checkboxes) {
 
     checkbox.addEventListener("change", function () {
 
-        const missionCard = this.closest(".mission-card");
+        const missionCard =
+            this.closest(".mission-card");
 
         missionCard.classList.toggle(
             "completed",
@@ -34,8 +114,21 @@ for (const checkbox of checkboxes) {
 
         updateProgress();
 
+        saveProgress();
+
     });
 
 }
 
-updateProgress();
+
+// =========================
+// INITIALIZATION
+// =========================
+
+function init() {
+
+    loadProgress();
+
+}
+
+init();
