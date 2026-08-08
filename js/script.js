@@ -21,6 +21,8 @@ const progressFill = document.querySelector(
     ".progress-fill"
 );
 
+const greeting = document.querySelector("#greeting");
+
 
 // =========================
 // FUNCTIONS
@@ -95,6 +97,36 @@ function loadProgress() {
 
 }
 
+function updateGreeting() {
+
+    const now = new Date();
+
+    const hour = now.getHours();
+
+    let message;
+
+    if (hour >= 5 && hour < 12) {
+
+        message = "🌅 Good Morning";
+
+    } else if (hour >= 12 && hour < 18) {
+
+        message = "☀️ Good Afternoon";
+
+    } else if (hour >= 18 && hour < 21) {
+
+        message = "🌇 Good Evening";
+
+    } else {
+
+        message = "🌙 Good Night";
+
+    }
+
+    greeting.textContent = `${message}, Fazal`;
+
+}
+
 
 // =========================
 // EVENTS
@@ -128,6 +160,8 @@ for (const checkbox of checkboxes) {
 function init() {
 
     loadProgress();
+
+    updateGreeting();
 
 }
 
