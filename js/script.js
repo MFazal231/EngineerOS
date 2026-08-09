@@ -3,6 +3,7 @@
 // =========================
 
 const STORAGE_KEY = "missionStates";
+const USER_NAME = "Fazal";
 
 
 // =========================
@@ -23,6 +24,7 @@ const progressFill = document.querySelector(
 
 const greeting = document.querySelector("#greeting");
 
+const missionCards = document.querySelectorAll(".mission-card");
 
 // =========================
 // FUNCTIONS
@@ -123,7 +125,7 @@ function updateGreeting() {
 
     }
 
-    greeting.textContent = `${message}, Fazal`;
+    greeting.textContent = `${message}, ${USER_NAME}`;
 
 }
 
@@ -147,6 +149,62 @@ for (const checkbox of checkboxes) {
         updateProgress();
 
         saveProgress();
+
+    });
+
+}
+
+for (const missionCard of missionCards) {
+
+    missionCard.addEventListener("click", function (event) {
+
+        if (event.target.closest('input[type="checkbox"]')) {
+
+            return;
+
+        }
+
+        this.classList.toggle("expanded");
+
+    });
+
+
+    const startButton =
+        missionCard.querySelector(".start-mission-btn");
+
+    const pauseButton =
+        missionCard.querySelector(".pause-mission-btn");
+
+    const completeButton =
+        missionCard.querySelector(".complete-mission-btn");
+
+
+    startButton.addEventListener("click", function (event) {
+
+        event.stopPropagation();
+
+        startButton.style.display = "none";
+
+        pauseButton.style.display = "block";
+
+        completeButton.style.display = "block";
+
+    });
+
+
+    pauseButton.addEventListener("click", function (event) {
+
+        event.stopPropagation();
+
+        if (pauseButton.textContent.includes("Pause")) {
+
+            pauseButton.textContent = "▶ Resume";
+
+        } else {
+
+            pauseButton.textContent = "⏸ Pause";
+
+        }
 
     });
 

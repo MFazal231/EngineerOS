@@ -546,6 +546,7 @@ body{
     border-bottom:1px solid var(--border);
     transition:
     background-color var(--ease);
+    cursor:pointer;
 
 }
 
@@ -597,6 +598,8 @@ body{
 
     flex-direction:column;
 
+    cursor:pointer;
+
 }
 
 .mission-label-text{
@@ -620,6 +623,143 @@ body{
     font-weight:700;
 
     margin:2px 0 12px;
+
+}
+
+/* ========================= */
+/* MISSION DETAILS */
+/* ========================= */
+
+.mission-details {
+
+    max-height:0;
+
+    overflow:hidden;
+
+    padding:0 24px;
+
+    background:#fafbff;
+
+    border-top:1px solid transparent;
+
+    opacity:0;
+
+    transition:
+        max-height .3s ease,
+        padding .3s ease,
+        opacity .2s ease,
+        border-color .3s ease;
+
+}
+
+.mission-card.expanded .mission-details {
+
+    max-height:200px;
+
+    padding:18px 24px 22px;
+
+    border-top-color:var(--border);
+
+    opacity:1;
+
+}
+
+.mission-details p {
+
+    margin-bottom:14px;
+
+    color:var(--text-light);
+
+    font-size:.9rem;
+
+    font-weight:600;
+
+}
+
+.start-mission-btn {
+
+    border:none;
+
+    padding:10px 18px;
+
+    border-radius:var(--radius-sm);
+
+    background:var(--primary);
+
+    color:white;
+
+    font-size:.9rem;
+
+    font-weight:700;
+
+    cursor:pointer;
+
+    transition:
+        background-color var(--ease),
+        transform var(--ease),
+        box-shadow var(--ease);
+
+}
+
+.start-mission-btn:hover {
+
+    background:#1d4ed8;
+
+    transform:translateY(-2px);
+
+    box-shadow:var(--shadow-md);
+
+}
+
+/* ========================= */
+/* MISSION ACTIONS */
+/* ========================= */
+
+.mission-actions {
+
+    display:flex;
+
+    gap:10px;
+
+}
+
+
+/* ========================= */
+/* MISSION ACTION BUTTONS */
+/* ========================= */
+
+.mission-actions button {
+
+    flex:1;
+
+    border:none;
+
+    padding:10px 18px;
+
+    border-radius:var(--radius-sm);
+
+    font-size:.9rem;
+
+    font-weight:700;
+
+    cursor:pointer;
+
+    transition:
+        background-color var(--ease),
+        transform var(--ease),
+        box-shadow var(--ease);
+
+}
+
+
+/* ========================= */
+/* PAUSE & COMPLETE */
+/* ========================= */
+
+.pause-mission-btn,
+.complete-mission-btn {
+
+    display:none;
 
 }
 
