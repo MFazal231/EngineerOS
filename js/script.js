@@ -223,4 +223,4 @@ function init() {
 
 }
 
-init();
+init()
