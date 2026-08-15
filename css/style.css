@@ -985,3 +985,32 @@ input:focus-visible{
     outline-offset:2px;
 
 }
+
+/* ========================= */
+/* MISSION COMPLETE */
+/* ========================= */
+
+.mission-complete-message {
+    display:none;
+    margin-top:24px;
+    padding:24px;
+    text-align:center;
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:var(--radius-md);
+}
+
+.mission-complete-message span {
+    display:block;
+    margin-bottom:8px;
+    font-size:2rem;
+}
+
+.mission-complete-message h3 {
+    margin-bottom:6px;
+    font-size:1.3rem;
+}
+
+.mission-complete-message p {
+    color:var(--text-light);
+}

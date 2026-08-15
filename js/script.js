@@ -14,6 +14,7 @@ const checkboxes = document.querySelectorAll(
 );
 const progressText = document.querySelector(".progress-header span");
 const progressFill = document.querySelector(".progress-fill");
+const missionCompleteMessage = document.querySelector(".mission-complete-message");
 const greeting = document.querySelector("#greeting");
 const missionCards = document.querySelectorAll(".mission-card");
 
@@ -38,6 +39,13 @@ function updateProgress() {
 
     progressFill.style.width =
         `${(completedMissions / totalMissions) * 100}%`;
+
+    if (completedMissions === totalMissions) {
+        missionCompleteMessage.style.display = "block";
+    }
+    else{
+        missionCompleteMessage.style.display = "none";
+    }
 }
 
 function saveProgress() {
@@ -147,18 +155,43 @@ for (let i = 0; i < checkboxes.length; i++) {
     checkbox.addEventListener("change", function () {
         const missionCard = this.closest(".mission-card");
 
-        missionStates[i].completed = this.checked;
-
         if (this.checked) {
+            missionStates[i].completed = true;
             missionStates[i].status = "completed";
-        } else {
-            missionStates[i].status = "not-started";
-        }
 
-        missionCard.classList.toggle(
-            "completed",
-            this.checked
-        );
+            missionCard.classList.add("completed");
+
+        } else {
+            missionStates[i].completed = false;
+            missionStates[i].status = "not-started";
+            missionStates[i].elapsedSeconds = 0;
+
+            missionCard.classList.remove("completed");
+
+            const startButton = missionCard.querySelector(
+                ".start-mission-btn"
+            );
+            const pauseButton = missionCard.querySelector(
+                ".pause-mission-btn"
+            );
+            const completeButton = missionCard.querySelector(
+                ".complete-mission-btn"
+            );
+            const timerDisplay = missionCard.querySelector(
+                ".mission-timer span"
+            );
+
+            startButton.style.display = "block";
+
+            pauseButton.style.display = "none";
+            pauseButton.textContent = "⏸ Pause";
+
+            completeButton.style.display = "none";
+            completeButton.textContent = "✓ Complete";
+            completeButton.disabled = false;
+
+            timerDisplay.textContent = "00:00";
+        }
 
         updateProgress();
         saveProgress();
