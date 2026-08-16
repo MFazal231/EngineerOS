@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="stylesheet" href="../css/style.css" />
+
+    <title>Projects — EngineerOS</title>
+  </head>
+
+  <body>
+    <header class="header">
+      <div class="logo">
+        <span class="logo-icon">🚀</span>
+        <h1>Engineer<span class="accent">OS</span></h1>
+      </div>
+
+      <nav class="nav" aria-label="Main Navigation">
+        <a href="../index.html">Dashboard</a>
+        <a href="projects.html" class="active">Projects</a>
+        <a href="#">DSA</a>
+        <a href="#">Roadmap</a>
+        <a href="#">Community</a>
+      </nav>
+
+      <div class="header-actions">
+        <div class="search-box">
+          <span class="search-icon">🔍</span>
+          <input type="text" placeholder="Search..." />
+          <span class="shortcut">Ctrl + K</span>
+        </div>
+
+        <button class="notification-btn" aria-label="Notifications">🔔</button>
+
+        <button class="profile-btn" aria-label="Open profile menu">
+          <span>Fazal</span>
+          <span>👤</span>
+        </button>
+      </div>
+    </header>
+
+    <main class="main">
+      <section class="projects-hero">
+        <div class="container">
+          <div class="projects-header">
+            <div>
+              <p class="section-label">BUILD</p>
+              <h2>Projects</h2>
+              <p>Turn what you learn into things you can actually ship.</p>
+            </div>
+
+            <button class="new-project-btn">+ New Project</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="projects-section">
+        <div class="container">
+          <div class="projects-grid">
+            <article class="project-card">
+              <div class="project-card-header">
+                <span class="project-status active"> 🔵 Active </span>
+              </div>
+
+              <h3>EngineerOS</h3>
+
+              <p>
+                A developer-focused operating system for learning, practicing,
+                building, and shipping.
+              </p>
+
+              <div class="project-tech">
+                <span>HTML</span>
+                <span>CSS</span>
+                <span>JavaScript</span>
+              </div>
+
+              <div class="project-next">
+                <strong>Next Step</strong>
+                <span>Build the Projects module</span>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+      <div class="project-modal" id="projectModal">
+        <div class="project-modal-content">
+          <div class="project-modal-header">
+            <div>
+              <p class="section-label">BUILD</p>
+              <h3>New Project</h3>
+            </div>
+
+            <button class="modal-close" id="closeProjectModal">&times;</button>
+          </div>
+
+          <form id="projectForm">
+            <div class="form-group">
+              <label for="projectName">Project Name</label>
+              <input
+                type="text"
+                id="projectName"
+                placeholder="e.g. EngineerOS"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="projectDescription">Description</label>
+              <textarea
+                id="projectDescription"
+                placeholder="What are you building?"
+                required
+              ></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="projectStatus">Status</label>
+              <select id="projectStatus">
+                <option value="planning">🟡 Planning</option>
+                <option value="active">🔵 Active</option>
+                <option value="completed">🟢 Completed</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="projectTech">Tech Stack</label>
+              <input
+                type="text"
+                id="projectTech"
+                placeholder="e.g. HTML, CSS, JavaScript"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="projectNext">Next Step</label>
+              <input
+                type="text"
+                id="projectNext"
+                placeholder="What should you build next?"
+              />
+            </div>
+
+            <div class="project-modal-actions">
+              <button type="button" class="secondary-btn" id="cancelProject">
+                Cancel
+              </button>
+
+              <button type="submit" class="primary-btn">Create Project</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </main>
+    <script src="../js/script.js"></script>
+  </body>
+</html>

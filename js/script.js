@@ -29,6 +29,10 @@ let missionStates = [];
 // =========================
 
 function updateProgress() {
+    if (!progressText || !progressFill) {
+        return;
+    }
+
     const totalMissions = checkboxes.length;
     const completedMissions = document.querySelectorAll(
         '.mission-label input[type="checkbox"]:checked'
@@ -40,11 +44,12 @@ function updateProgress() {
     progressFill.style.width =
         `${(completedMissions / totalMissions) * 100}%`;
 
-    if (completedMissions === totalMissions) {
-        missionCompleteMessage.style.display = "block";
-    }
-    else{
-        missionCompleteMessage.style.display = "none";
+    if (missionCompleteMessage) {
+        if (completedMissions === totalMissions && totalMissions > 0) {
+            missionCompleteMessage.style.display = "block";
+        } else {
+            missionCompleteMessage.style.display = "none";
+        }
     }
 }
 
@@ -122,6 +127,9 @@ function loadProgress() {
 }
 
 function updateGreeting() {
+    if (!greeting) {
+        return;
+    }
     const hour = new Date().getHours();
     let message;
 
@@ -360,4 +368,37 @@ for (let i = 0; i < missionCards.length; i++) {
 
         pauseButton.style.display = "none";
     });
+}
+
+// =========================
+// PROJECT MODAL
+// =========================
+
+const projectModal = document.querySelector("#projectModal");
+const newProjectButton = document.querySelector(".new-project-btn");
+const closeProjectModal = document.querySelector("#closeProjectModal");
+const cancelProject = document.querySelector("#cancelProject");
+
+if (projectModal && newProjectButton) {
+
+    newProjectButton.addEventListener("click", function () {
+        projectModal.classList.add("show");
+    });
+
+}
+
+if (projectModal && closeProjectModal) {
+
+    closeProjectModal.addEventListener("click", function () {
+        projectModal.classList.remove("show");
+    });
+
+}
+
+if (projectModal && cancelProject) {
+
+    cancelProject.addEventListener("click", function () {
+        projectModal.classList.remove("show");
+    });
+
 }
