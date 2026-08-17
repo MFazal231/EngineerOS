@@ -1103,9 +1103,10 @@ input:focus-visible {
 /* ========================= */
 
 .project-actions {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 16px;
+    display:flex;
+    justify-content:flex-end;
+    gap:8px;
+    margin-top:16px;
 }
 
 .project-edit-btn {
@@ -1125,4 +1126,23 @@ input:focus-visible {
 .project-edit-btn:hover {
   background: #f8fafc;
   border-color: #cbd5e1;
+}
+
+.project-delete-btn {
+    border:1px solid #fecaca;
+    padding:7px 12px;
+    border-radius:var(--radius-sm);
+    background:white;
+    color:#dc2626;
+    font-size:.8rem;
+    font-weight:700;
+    cursor:pointer;
+    transition:
+        background-color var(--ease),
+        border-color var(--ease);
+}
+
+.project-delete-btn:hover {
+    background:#fef2f2;
+    border-color:#fca5a5;
 }

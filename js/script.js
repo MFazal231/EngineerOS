@@ -424,10 +424,14 @@ function renderProjects() {
             </div>
 
             <div class="project-actions">
-                <button class="project-edit-btn" data-id="${project.id}">
-                    Edit
-                </button>
-            </div>
+    <button class="project-edit-btn" data-id="${project.id}">
+        Edit
+    </button>
+
+    <button class="project-delete-btn" data-id="${project.id}">
+        Delete
+    </button>
+</div>
         `;
 
     projectsGrid.appendChild(projectCard);
@@ -438,6 +442,14 @@ function renderProjects() {
   for (const button of editButtons) {
     button.addEventListener("click", function () {
       editProject(this.dataset.id);
+    });
+  }
+
+  const deleteButtons = document.querySelectorAll(".project-delete-btn");
+
+  for (const button of deleteButtons) {
+    button.addEventListener("click", function () {
+      deleteProject(this.dataset.id);
     });
   }
 }
@@ -463,6 +475,27 @@ function editProject(projectId) {
   projectModal.classList.add("show");
 }
 
+function deleteProject(projectId) {
+  const project = projects.find((project) => project.id == projectId);
+
+  if (!project) {
+    return;
+  }
+
+  const confirmed = confirm(
+    `Delete "${project.name}"?\n\nThis cannot be undone.`,
+  );
+
+  if (!confirmed) {
+    return;
+  }
+
+  projects = projects.filter((project) => project.id != projectId);
+
+  saveProjects();
+  renderProjects();
+}
+
 // =========================
 // PROJECT MODAL
 // =========================
@@ -473,7 +506,7 @@ if (projectModal && newProjectButton) {
     projectForm.reset();
     projectModalTitle.textContent = "New Project";
     projectSubmitButton.textContent = "Create Project";
-    
+
     projectModal.classList.add("show");
   });
 }
