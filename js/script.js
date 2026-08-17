@@ -371,54 +371,52 @@ for (let i = 0; i < missionCards.length; i++) {
 }
 
 // =========================
-// PROJECT MODAL
-// =========================
-
-const projectModal = document.querySelector("#projectModal");
-const newProjectButton = document.querySelector(".new-project-btn");
-const closeProjectModal = document.querySelector("#closeProjectModal");
-const cancelProject = document.querySelector("#cancelProject");
-
-if (projectModal && newProjectButton) {
-
-    newProjectButton.addEventListener("click", function () {
-        projectModal.classList.add("show");
-    });
-
-}
-
-if (projectModal && closeProjectModal) {
-
-    closeProjectModal.addEventListener("click", function () {
-        projectModal.classList.remove("show");
-    });
-
-}
-
-if (projectModal && cancelProject) {
-
-    cancelProject.addEventListener("click", function () {
-        projectModal.classList.remove("show");
-    });
-
-}
-
-// =========================
 // PROJECT DATA
 // =========================
 
 const PROJECT_STORAGE_KEY = "projects";
 const projectForm = document.querySelector("#projectForm");
+const projectsGrid = document.querySelector(".projects-grid");
+const projectModal = document.querySelector("#projectModal");
+const newProjectButton = document.querySelector(".new-project-btn");
+const closeProjectModal = document.querySelector("#closeProjectModal");
+const cancelProject = document.querySelector("#cancelProject");
 
 let projects = [];
 
 function loadProjects() {
-    const savedProjects = localStorage.getItem(
-        PROJECT_STORAGE_KEY
-    );
+    const savedProjects = localStorage.getItem(PROJECT_STORAGE_KEY);
 
     if (savedProjects) {
         projects = JSON.parse(savedProjects);
+
+        let updated = false;
+
+        for (const project of projects) {
+            if (!project.id) {
+                project.id = Date.now() + Math.random();
+                updated = true;
+            }
+        }
+
+        if (updated) {
+            saveProjects();
+        }
+    }
+
+    if (projects.length === 0) {
+        projects.push({
+            id: Date.now(),
+            name: "EngineerOS",
+            description: "A developer-focused operating system for learning, practicing, building, and shipping.",
+            status: "active",
+            statusIcon: "🔵",
+            statusText: "Active",
+            tech: ["HTML", "CSS", "JavaScript"],
+            nextStep: "Build the Projects module"
+        });
+
+        saveProjects();
     }
 }
 
@@ -429,6 +427,125 @@ function saveProjects() {
     );
 }
 
+function renderProjects() {
+    if (!projectsGrid) {
+        return;
+    }
+
+    projectsGrid.innerHTML = "";
+
+    for (const project of projects) {
+        const projectCard = document.createElement("article");
+
+        projectCard.className = "project-card";
+
+        projectCard.innerHTML = `
+            <div class="project-card-header">
+                <span class="project-status ${project.status}">
+                    ${project.statusIcon} ${project.statusText}
+                </span>
+            </div>
+
+            <h3>${project.name}</h3>
+
+            <p>${project.description}</p>
+
+            <div class="project-tech">
+                ${project.tech
+                    .map(technology => `<span>${technology}</span>`)
+                    .join("")}
+            </div>
+
+            <div class="project-next">
+                <strong>Next Step</strong>
+                <span>${project.nextStep}</span>
+            </div>
+        `;
+
+        projectsGrid.appendChild(projectCard);
+    }
+}
+
+// =========================
+// PROJECT MODAL
+// =========================
+
+if (projectModal && newProjectButton) {
+    newProjectButton.addEventListener("click", function () {
+        projectModal.classList.add("show");
+    });
+}
+
+if (projectModal && closeProjectModal) {
+    closeProjectModal.addEventListener("click", function () {
+        projectModal.classList.remove("show");
+    });
+}
+
+if (projectModal && cancelProject) {
+    cancelProject.addEventListener("click", function () {
+        projectModal.classList.remove("show");
+    });
+}
+
+// =========================
+// CREATE PROJECT
+// =========================
+
+if (projectForm) {
+    projectForm.addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        const name = document.querySelector("#projectName").value.trim();
+        const description = document.querySelector("#projectDescription").value.trim();
+        const status = document.querySelector("#projectStatus").value;
+        const tech = document.querySelector("#projectTech").value
+            .split(",")
+            .map(item => item.trim())
+            .filter(item => item !== "");
+        const nextStep = document.querySelector("#projectNext").value.trim();
+
+        const statusData = {
+            planning: {
+                icon: "🟡",
+                text: "Planning"
+            },
+            active: {
+                icon: "🔵",
+                text: "Active"
+            },
+            completed: {
+                icon: "🟢",
+                text: "Completed"
+            }
+        };
+
+        const project = {
+            id: Date.now(),
+            name: name,
+            description: description,
+            status: status,
+            statusIcon: statusData[status].icon,
+            statusText: statusData[status].text,
+            tech: tech,
+            nextStep: nextStep
+        };
+
+        projects.push(project);
+
+        saveProjects();
+        renderProjects();
+
+        projectForm.reset();
+        projectModal.classList.remove("show");
+    });
+}
+
+// =========================
+// PROJECT INITIALIZATION
+// =========================
+
 if (projectForm) {
     loadProjects();
+    renderProjects();
 }
