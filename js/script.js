@@ -342,6 +342,8 @@ const projectModal = document.querySelector("#projectModal");
 const newProjectButton = document.querySelector(".new-project-btn");
 const closeProjectModal = document.querySelector("#closeProjectModal");
 const cancelProject = document.querySelector("#cancelProject");
+const projectModalTitle = document.querySelector("#projectModalTitle");
+const projectSubmitButton = document.querySelector("#projectSubmitButton");
 
 let projects = [];
 let editingProjectId = null;
@@ -450,14 +452,13 @@ function editProject(projectId) {
   editingProjectId = project.id;
 
   document.querySelector("#projectName").value = project.name;
-
   document.querySelector("#projectDescription").value = project.description;
-
   document.querySelector("#projectStatus").value = project.status;
-
   document.querySelector("#projectTech").value = project.tech.join(", ");
-
   document.querySelector("#projectNext").value = project.nextStep;
+
+  projectModalTitle.textContent = "Edit Project";
+  projectSubmitButton.textContent = "Save Changes";
 
   projectModal.classList.add("show");
 }
@@ -468,6 +469,11 @@ function editProject(projectId) {
 
 if (projectModal && newProjectButton) {
   newProjectButton.addEventListener("click", function () {
+    editingProjectId = null;
+    projectForm.reset();
+    projectModalTitle.textContent = "New Project";
+    projectSubmitButton.textContent = "Create Project";
+    
     projectModal.classList.add("show");
   });
 }
