@@ -402,3 +402,33 @@ if (projectModal && cancelProject) {
     });
 
 }
+
+// =========================
+// PROJECT DATA
+// =========================
+
+const PROJECT_STORAGE_KEY = "projects";
+const projectForm = document.querySelector("#projectForm");
+
+let projects = [];
+
+function loadProjects() {
+    const savedProjects = localStorage.getItem(
+        PROJECT_STORAGE_KEY
+    );
+
+    if (savedProjects) {
+        projects = JSON.parse(savedProjects);
+    }
+}
+
+function saveProjects() {
+    localStorage.setItem(
+        PROJECT_STORAGE_KEY,
+        JSON.stringify(projects)
+    );
+}
+
+if (projectForm) {
+    loadProjects();
+}
