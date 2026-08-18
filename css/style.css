@@ -1103,10 +1103,10 @@ input:focus-visible {
 /* ========================= */
 
 .project-actions {
-    display:flex;
-    justify-content:flex-end;
-    gap:8px;
-    margin-top:16px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 16px;
 }
 
 .project-edit-btn {
@@ -1129,20 +1129,97 @@ input:focus-visible {
 }
 
 .project-delete-btn {
-    border:1px solid #fecaca;
-    padding:7px 12px;
-    border-radius:var(--radius-sm);
-    background:white;
-    color:#dc2626;
-    font-size:.8rem;
-    font-weight:700;
-    cursor:pointer;
-    transition:
-        background-color var(--ease),
-        border-color var(--ease);
+  border: 1px solid #fecaca;
+  padding: 7px 12px;
+  border-radius: var(--radius-sm);
+  background: white;
+  color: #dc2626;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    background-color var(--ease),
+    border-color var(--ease);
 }
 
 .project-delete-btn:hover {
-    background:#fef2f2;
-    border-color:#fca5a5;
+  background: #fef2f2;
+  border-color: #fca5a5;
+}
+
+/* ========================= */
+/* DSA */
+/* ========================= */
+
+.dsa-hero {
+  padding: 40px 0 24px;
+}
+
+.dsa-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.dsa-header h2 {
+  margin: 4px 0 8px;
+  font-size: 2rem;
+}
+
+.dsa-header > div > p:last-child {
+  color: var(--text-light);
+  font-weight: 500;
+}
+
+/* ========================= */
+/* DSA TOPICS */
+/* ========================= */
+
+.dsa-section {
+    padding:24px 0 48px;
+}
+
+.dsa-section-header {
+    margin-bottom:20px;
+}
+
+.dsa-section-header h3 {
+    margin-top:4px;
+    font-size:1.35rem;
+}
+
+.dsa-topics-grid {
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));
+    gap:16px;
+}
+
+.dsa-topic-card {
+    padding:20px;
+    background:white;
+    border:1px solid var(--border);
+    border-radius:var(--radius-md);
+    box-shadow:var(--shadow-sm);
+    transition:
+        transform var(--ease),
+        box-shadow var(--ease),
+        border-color var(--ease);
+}
+
+.dsa-topic-card:hover {
+    transform:translateY(-3px);
+    box-shadow:var(--shadow-md);
+    border-color:#cbd5e1;
+}
+
+.dsa-topic-card h4 {
+    margin-bottom:8px;
+    font-size:1rem;
+}
+
+.dsa-topic-card p {
+    color:var(--text-light);
+    font-size:.85rem;
+    line-height:1.6;
 }
