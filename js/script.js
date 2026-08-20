@@ -608,3 +608,85 @@ if (projectForm) {
   loadProjects();
   renderProjects();
 }
+
+// =========================
+// DSA PROBLEMS
+// =========================
+
+const arrayProblems = [
+  {
+    id: 1,
+    title: "Two Sum",
+    difficulty: "Easy",
+    description: "Find two numbers in an array that add up to a target value.",
+    topics: ["Array", "Hash Table"],
+    status: "not-started",
+    url: "https://leetcode.com/problems/two-sum/",
+  },
+];
+const arrayProblemsContainer = document.querySelector(".array-problems");
+
+function renderArrayProblems() {
+  if (!arrayProblemsContainer) {
+    return;
+  }
+
+  arrayProblemsContainer.innerHTML = "";
+
+  for (const problem of arrayProblems) {
+    const problemCard = document.createElement("article");
+
+    problemCard.className = "dsa-problem-card";
+
+    problemCard.innerHTML = `
+            <div class="dsa-problem-header">
+                <div>
+                    <h4>${problem.title}</h4>
+                    <p>${problem.description}</p>
+                </div>
+
+                <span class="problem-difficulty ${problem.difficulty.toLowerCase()}">
+                    ${problem.difficulty}
+                </span>
+            </div>
+
+            <div class="dsa-problem-topics">
+                ${problem.topics
+                  .map((topic) => `<span>${topic}</span>`)
+                  .join("")}
+            </div>
+
+            <div class="dsa-problem-footer">
+                <span class="problem-status">
+                    Not Started
+                </span>
+
+                <button class="problem-solve-btn" data-url="${problem.url}">
+                    Solve
+                </button>
+            </div>
+        `;
+
+    arrayProblemsContainer.appendChild(problemCard);
+  }
+}
+
+function setupProblemButtons() {
+  if (!arrayProblemsContainer) {
+    return;
+  }
+
+  const solveButtons =
+    arrayProblemsContainer.querySelectorAll(".problem-solve-btn");
+
+  for (const button of solveButtons) {
+    button.addEventListener("click", function () {
+      window.open(this.dataset.url, "_blank");
+    });
+  }
+}
+
+if (arrayProblemsContainer) {
+  renderArrayProblems();
+  setupProblemButtons();
+}
