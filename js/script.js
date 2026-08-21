@@ -613,6 +613,7 @@ if (projectForm) {
 // DSA PROBLEMS
 // =========================
 
+const DSA_STORAGE_KEY = "dsaProblems";
 const arrayProblems = [
   {
     id: 1,
@@ -625,6 +626,26 @@ const arrayProblems = [
   },
 ];
 const arrayProblemsContainer = document.querySelector(".array-problems");
+
+function loadArrayProblems() {
+    const savedProblems = localStorage.getItem(
+        DSA_STORAGE_KEY
+    );
+
+    if (savedProblems) {
+        const savedData = JSON.parse(savedProblems);
+
+        for (const problem of arrayProblems) {
+            const savedProblem = savedData.find(
+                savedProblem => savedProblem.id === problem.id
+            );
+
+            if (savedProblem) {
+                problem.status = savedProblem.status;
+            }
+        }
+    }
+}
 
 function renderArrayProblems() {
   if (!arrayProblemsContainer) {
@@ -657,14 +678,22 @@ function renderArrayProblems() {
             </div>
 
             <div class="dsa-problem-footer">
-                <span class="problem-status">
-                    Not Started
-                </span>
+              <select class="problem-status-select" data-id="${problem.id}">
+        <option value="not-started" ${problem.status === "not-started" ? "selected" : ""}>
+            Not Started
+        </option>
+        <option value="in-progress" ${problem.status === "in-progress" ? "selected" : ""}>
+            In Progress
+        </option>
+        <option value="solved" ${problem.status === "solved" ? "selected" : ""}>
+            Solved
+        </option>
+    </select>
 
-                <button class="problem-solve-btn" data-url="${problem.url}">
-                    Solve
-                </button>
-            </div>
+    <button class="problem-solve-btn" data-url="${problem.url}">
+        Solve
+    </button>
+</div>
         `;
 
     arrayProblemsContainer.appendChild(problemCard);
@@ -686,7 +715,36 @@ function setupProblemButtons() {
   }
 }
 
+function setupProblemStatus() {
+  if (!arrayProblemsContainer) {
+    return;
+  }
+
+  const statusSelects = arrayProblemsContainer.querySelectorAll(
+    ".problem-status-select",
+  );
+
+  for (const select of statusSelects) {
+    select.addEventListener("change", function () {
+      const problemId = Number(this.dataset.id);
+      const problem = arrayProblems.find((problem) => problem.id === problemId);
+
+      if (!problem) {
+        return;
+      }
+
+      problem.status = this.value;
+      localStorage.setItem(
+        DSA_STORAGE_KEY, 
+        JSON.stringify(arrayProblems)
+      );
+    });
+  }
+}
+
 if (arrayProblemsContainer) {
+  loadArrayProblems();
   renderArrayProblems();
   setupProblemButtons();
+  setupProblemStatus();
 }
