@@ -693,6 +693,8 @@ const arrayProblems = [
   },
 ];
 const arrayProblemsContainer = document.querySelector(".array-problems");
+let currentDifficulty = "all";
+let currentStatus = "all";
 
 function loadArrayProblems() {
   const savedProblems = localStorage.getItem(DSA_STORAGE_KEY);
@@ -741,55 +743,120 @@ function renderArrayProblems() {
     return;
   }
 
+  const filteredProblems = arrayProblems.filter((problem) => {
+    const matchesDifficulty =
+      currentDifficulty === "all" || problem.difficulty === currentDifficulty;
+
+    const matchesStatus =
+      currentStatus === "all" || problem.status === currentStatus;
+
+    return matchesDifficulty && matchesStatus;
+  });
+
   arrayProblemsContainer.innerHTML = "";
 
-  for (const problem of arrayProblems) {
+  if (filteredProblems.length === 0) {
+    arrayProblemsContainer.innerHTML = `
+    <div class="problem-empty-state">
+      <strong>No problems yet</strong>
+      <span>No ${currentDifficulty} problems have been added.</span>
+    </div>
+  `;
+
+    return;
+  }
+
+  for (const problem of filteredProblems) {
     const problemCard = document.createElement("article");
 
     problemCard.className = "dsa-problem-card";
 
     problemCard.innerHTML = `
-            <div class="dsa-problem-header">
-    <div class="dsa-problem-title">
-        <h4>${problem.title}</h4>
+      <div class="dsa-problem-header">
+        <div class="dsa-problem-title">
+          <h4>${problem.title}</h4>
 
-        <span class="problem-difficulty ${problem.difficulty.toLowerCase()}">
+          <span class="problem-difficulty ${problem.difficulty.toLowerCase()}">
             ${problem.difficulty}
-        </span>
-    </div>
+          </span>
+        </div>
 
-    <p>${problem.description}</p>
-</div>
+        <p>${problem.description}</p>
+      </div>
 
-            <div class="dsa-problem-topics">
-                ${problem.topics
-                  .map((topic) => `<span>${topic}</span>`)
-                  .join("")}
-            </div>
+      <div class="dsa-problem-topics">
+        ${problem.topics.map((topic) => `<span>${topic}</span>`).join("")}
+      </div>
 
-            <div class="dsa-problem-footer">
-              <select
-    class="problem-status-select status-${problem.status}"
-    data-id="${problem.id}"
->
-        <option value="not-started" ${problem.status === "not-started" ? "selected" : ""}>
+      <div class="dsa-problem-footer">
+        <select
+          class="problem-status-select status-${problem.status}"
+          data-id="${problem.id}"
+        >
+          <option value="not-started" ${
+            problem.status === "not-started" ? "selected" : ""
+          }>
             Not Started
-        </option>
-        <option value="in-progress" ${problem.status === "in-progress" ? "selected" : ""}>
-            In Progress
-        </option>
-        <option value="solved" ${problem.status === "solved" ? "selected" : ""}>
-            Solved
-        </option>
-    </select>
+          </option>
 
-    <button class="problem-solve-btn" data-url="${problem.url}">
-        Solve
-    </button>
-</div>
-        `;
+          <option value="in-progress" ${
+            problem.status === "in-progress" ? "selected" : ""
+          }>
+            In Progress
+          </option>
+
+          <option value="solved" ${
+            problem.status === "solved" ? "selected" : ""
+          }>
+            Solved
+          </option>
+        </select>
+
+        <button class="problem-solve-btn" data-url="${problem.url}">
+          Solve
+        </button>
+      </div>
+    `;
 
     arrayProblemsContainer.appendChild(problemCard);
+  }
+}
+
+function setupProblemFilters() {
+  const difficultyButtons = document.querySelectorAll(".difficulty-filter");
+
+  const statusButtons = document.querySelectorAll(".status-filter");
+
+  for (const button of difficultyButtons) {
+    button.addEventListener("click", function () {
+      currentDifficulty = this.dataset.difficulty;
+
+      for (const difficultyButton of difficultyButtons) {
+        difficultyButton.classList.remove("active");
+      }
+
+      this.classList.add("active");
+
+      renderArrayProblems();
+      setupProblemButtons();
+      setupProblemStatus();
+    });
+  }
+
+  for (const button of statusButtons) {
+    button.addEventListener("click", function () {
+      currentStatus = this.dataset.status;
+
+      for (const statusButton of statusButtons) {
+        statusButton.classList.remove("active");
+      }
+
+      this.classList.add("active");
+
+      renderArrayProblems();
+      setupProblemButtons();
+      setupProblemStatus();
+    });
   }
 }
 
@@ -848,5 +915,6 @@ if (arrayProblemsContainer) {
   renderArrayProblems();
   setupProblemButtons();
   setupProblemStatus();
+  setupProblemFilters();
   updateArrayProgress();
 }
