@@ -1378,3 +1378,20 @@ input:focus-visible {
 .problem-status-select:focus {
     border-color:var(--primary);
 }
+
+.problem-status-select.status-not-started {
+    background:#f8fafc;
+    color:#475569;
+}
+
+.problem-status-select.status-in-progress {
+    background:#eff6ff;
+    color:#2563eb;
+    border-color:#bfdbfe;
+}
+
+.problem-status-select.status-solved {
+    background:#ecfdf5;
+    color:#059669;
+    border-color:#a7f3d0;
+}

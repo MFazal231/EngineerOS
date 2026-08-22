@@ -653,6 +653,44 @@ const arrayProblems = [
     status: "not-started",
     url: "https://leetcode.com/problems/product-of-array-except-self/",
   },
+  {
+    id: 5,
+    title: "Contains Duplicate",
+    difficulty: "Easy",
+    description:
+      "Determine whether any value appears at least twice in an array.",
+    topics: ["Array", "Hash Table"],
+    status: "not-started",
+    url: "https://leetcode.com/problems/contains-duplicate/",
+  },
+  {
+    id: 6,
+    title: "Maximum Product Subarray",
+    difficulty: "Medium",
+    description: "Find the contiguous subarray with the largest product.",
+    topics: ["Array", "Dynamic Programming"],
+    status: "not-started",
+    url: "https://leetcode.com/problems/maximum-product-subarray/",
+  },
+  {
+    id: 7,
+    title: "Move Zeroes",
+    difficulty: "Easy",
+    description:
+      "Move all zeroes to the end of the array while maintaining the order of non-zero elements.",
+    topics: ["Array", "Two Pointers"],
+    status: "not-started",
+    url: "https://leetcode.com/problems/move-zeroes/",
+  },
+  {
+    id: 8,
+    title: "Rotate Array",
+    difficulty: "Medium",
+    description: "Rotate the array to the right by k steps.",
+    topics: ["Array", "Math", "Two Pointers"],
+    status: "not-started",
+    url: "https://leetcode.com/problems/rotate-array/",
+  },
 ];
 const arrayProblemsContainer = document.querySelector(".array-problems");
 
@@ -706,7 +744,10 @@ function renderArrayProblems() {
             </div>
 
             <div class="dsa-problem-footer">
-              <select class="problem-status-select" data-id="${problem.id}">
+              <select
+    class="problem-status-select status-${problem.status}"
+    data-id="${problem.id}"
+>
         <option value="not-started" ${problem.status === "not-started" ? "selected" : ""}>
             Not Started
         </option>
@@ -762,6 +803,13 @@ function setupProblemStatus() {
       }
 
       problem.status = this.value;
+      this.classList.remove(
+        "status-not-started",
+        "status-in-progress",
+        "status-solved",
+      );
+
+      this.classList.add(`status-${problem.status}`);
       localStorage.setItem(DSA_STORAGE_KEY, JSON.stringify(arrayProblems));
     });
   }
