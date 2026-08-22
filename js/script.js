@@ -624,27 +624,54 @@ const arrayProblems = [
     status: "not-started",
     url: "https://leetcode.com/problems/two-sum/",
   },
+  {
+    id: 2,
+    title: "Best Time to Buy and Sell Stock",
+    difficulty: "Easy",
+    description:
+      "Find the maximum profit from buying and selling a stock once.",
+    topics: ["Array", "Greedy"],
+    status: "not-started",
+    url: "https://leetcode.com/problems/best-time-to-buy-and-sell-stock/",
+  },
+  {
+    id: 3,
+    title: "Maximum Subarray",
+    difficulty: "Medium",
+    description: "Find the contiguous subarray with the largest sum.",
+    topics: ["Array", "Divide and Conquer", "Dynamic Programming"],
+    status: "not-started",
+    url: "https://leetcode.com/problems/maximum-subarray/",
+  },
+  {
+    id: 4,
+    title: "Product of Array Except Self",
+    difficulty: "Medium",
+    description:
+      "Return an array where each element is the product of all other elements.",
+    topics: ["Array", "Prefix Sum"],
+    status: "not-started",
+    url: "https://leetcode.com/problems/product-of-array-except-self/",
+  },
 ];
 const arrayProblemsContainer = document.querySelector(".array-problems");
 
 function loadArrayProblems() {
-    const savedProblems = localStorage.getItem(
-        DSA_STORAGE_KEY
-    );
+  const savedProblems = localStorage.getItem(DSA_STORAGE_KEY);
 
-    if (savedProblems) {
-        const savedData = JSON.parse(savedProblems);
+  if (savedProblems) {
+    const savedData = JSON.parse(savedProblems);
 
-        for (const problem of arrayProblems) {
-            const savedProblem = savedData.find(
-                savedProblem => savedProblem.id === problem.id
-            );
+    for (const problem of arrayProblems) {
+      const savedProblem = savedData.find(
+        (savedProblem) => savedProblem.id === problem.id,
+      );
 
-            if (savedProblem) {
-                problem.status = savedProblem.status;
-            }
-        }
+      if (savedProblem) {
+        problem.status = savedProblem.status;
+      }
     }
+  }
 }
 
 function renderArrayProblems() {
@@ -661,15 +688,16 @@ function renderArrayProblems() {
 
     problemCard.innerHTML = `
             <div class="dsa-problem-header">
-                <div>
-                    <h4>${problem.title}</h4>
-                    <p>${problem.description}</p>
-                </div>
+    <div class="dsa-problem-title">
+        <h4>${problem.title}</h4>
 
-                <span class="problem-difficulty ${problem.difficulty.toLowerCase()}">
-                    ${problem.difficulty}
-                </span>
-            </div>
+        <span class="problem-difficulty ${problem.difficulty.toLowerCase()}">
+            ${problem.difficulty}
+        </span>
+    </div>
+
+    <p>${problem.description}</p>
+</div>
 
             <div class="dsa-problem-topics">
                 ${problem.topics
@@ -734,10 +762,7 @@ function setupProblemStatus() {
       }
 
       problem.status = this.value;
-      localStorage.setItem(
-        DSA_STORAGE_KEY, 
-        JSON.stringify(arrayProblems)
-      );
+      localStorage.setItem(DSA_STORAGE_KEY, JSON.stringify(arrayProblems));
     });
   }
 }

@@ -1229,20 +1229,37 @@ input:focus-visible {
 /* ========================= */
 
 .array-problems {
-  display: grid;
-  gap: 16px;
+    display:grid;
+    grid-template-columns:repeat(4, 1fr);
+    gap:16px;
+    align-items:stretch;
+}
+
+@media (max-width:1100px) {
+    .array-problems {
+        grid-template-columns:repeat(2, 1fr);
+    }
+}
+
+@media (max-width:650px) {
+    .array-problems {
+        grid-template-columns:1fr;
+    }
 }
 
 .dsa-problem-card {
-  padding: 20px;
-  background: white;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-sm);
-  transition:
-    transform var(--ease),
-    box-shadow var(--ease),
-    border-color var(--ease);
+    display:flex;
+    flex-direction:column;
+    height:100%;
+    padding:20px;
+    background:white;
+    border:1px solid var(--border);
+    border-radius:var(--radius-md);
+    box-shadow:var(--shadow-sm);
+    transition:
+        transform var(--ease),
+        box-shadow var(--ease),
+        border-color var(--ease);
 }
 
 .dsa-problem-card:hover {
@@ -1252,10 +1269,21 @@ input:focus-visible {
 }
 
 .dsa-problem-header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 20px;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+}
+
+.dsa-problem-title {
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:10px;
+}
+
+.dsa-problem-title h4 {
+    margin:0;
+    font-size:1.05rem;
 }
 
 .dsa-problem-header h4 {
@@ -1264,9 +1292,10 @@ input:focus-visible {
 }
 
 .dsa-problem-header p {
-  color: var(--text-light);
-  font-size: 0.85rem;
-  line-height: 1.5;
+    color:var(--text-light);
+    font-size:.85rem;
+    line-height:1.5;
+    margin:0;
 }
 
 .problem-difficulty {
@@ -1302,7 +1331,7 @@ input:focus-visible {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-top: 18px;
+  margin-top: auto;
   padding-top: 16px;
   border-top: 1px solid var(--border);
 }
