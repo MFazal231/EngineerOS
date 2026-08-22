@@ -58,12 +58,41 @@
 
       <section class="dsa-section">
         <div class="container">
+          <div class="array-progress">
+            <div class="array-progress-stats">
+              <div class="progress-stat">
+                <span>Total</span>
+                <strong id="arrayTotal">0</strong>
+              </div>
+
+              <div class="progress-stat">
+                <span>Solved</span>
+                <strong id="arraySolved">0</strong>
+              </div>
+
+              <div class="progress-stat">
+                <span>In Progress</span>
+                <strong id="arrayInProgress">0</strong>
+              </div>
+            </div>
+
+            <div class="array-progress-header">
+              <span>Progress</span>
+              <strong id="arrayProgressPercent">0%</strong>
+            </div>
+
+            <div class="array-progress-bar">
+              <div class="array-progress-fill" id="arrayProgressFill"></div>
+            </div>
+          </div>
+
           <div class="dsa-section-header">
             <div>
               <p class="section-label">PRACTICE</p>
               <h3>Problems</h3>
             </div>
           </div>
+
           <div class="array-problems"></div>
         </div>
       </section>

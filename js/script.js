@@ -712,6 +712,30 @@ function loadArrayProblems() {
   }
 }
 
+function updateArrayProgress() {
+  const total = arrayProblems.length;
+
+  const solved = arrayProblems.filter(
+    (problem) => problem.status === "solved",
+  ).length;
+
+  const inProgress = arrayProblems.filter(
+    (problem) => problem.status === "in-progress",
+  ).length;
+
+  const progressPercent = total === 0 ? 0 : Math.round((solved / total) * 100);
+
+  document.querySelector("#arrayTotal").textContent = total;
+  document.querySelector("#arraySolved").textContent = solved;
+  document.querySelector("#arrayInProgress").textContent = inProgress;
+
+  document.querySelector("#arrayProgressPercent").textContent =
+    `${progressPercent}%`;
+
+  document.querySelector("#arrayProgressFill").style.width =
+    `${progressPercent}%`;
+}
+
 function renderArrayProblems() {
   if (!arrayProblemsContainer) {
     return;
@@ -803,6 +827,7 @@ function setupProblemStatus() {
       }
 
       problem.status = this.value;
+
       this.classList.remove(
         "status-not-started",
         "status-in-progress",
@@ -810,7 +835,10 @@ function setupProblemStatus() {
       );
 
       this.classList.add(`status-${problem.status}`);
+
       localStorage.setItem(DSA_STORAGE_KEY, JSON.stringify(arrayProblems));
+
+      updateArrayProgress();
     });
   }
 }
@@ -820,4 +848,5 @@ if (arrayProblemsContainer) {
   renderArrayProblems();
   setupProblemButtons();
   setupProblemStatus();
+  updateArrayProgress();
 }
