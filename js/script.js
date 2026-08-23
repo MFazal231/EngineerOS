@@ -691,13 +691,92 @@ const arrayProblems = [
     status: "not-started",
     url: "https://leetcode.com/problems/rotate-array/",
   },
+  {
+    id: 9,
+    title: "Valid Anagram",
+    difficulty: "Easy",
+    description: "Determine whether two strings are anagrams of each other.",
+    topics: ["Hash Table", "String", "Sorting"],
+    status: "not-started",
+    url: "https://leetcode.com/problems/valid-anagram/",
+  },
+  {
+    id: 10,
+    title: "Intersection of Two Arrays",
+    difficulty: "Easy",
+    description: "Return the unique elements that appear in both arrays.",
+    topics: ["Array", "Hash Table", "Two Pointers"],
+    status: "not-started",
+    url: "https://leetcode.com/problems/intersection-of-two-arrays/",
+  },
+  {
+    id: 11,
+    title: "Majority Element",
+    difficulty: "Easy",
+    description:
+      "Find the element that appears more than half of the time in the array.",
+    topics: ["Array", "Hash Table", "Sorting"],
+    status: "not-started",
+    url: "https://leetcode.com/problems/majority-element/",
+  },
+  {
+    id: 12,
+    title: "Merge Sorted Array",
+    difficulty: "Easy",
+    description:
+      "Merge two sorted arrays into the first array in sorted order.",
+    topics: ["Array", "Two Pointers", "Sorting"],
+    status: "not-started",
+    url: "https://leetcode.com/problems/merge-sorted-array/",
+  },
+  {
+    id: 13,
+    title: "3Sum",
+    difficulty: "Medium",
+    description: "Find all unique triplets in the array that add up to zero.",
+    topics: ["Array", "Two Pointers", "Sorting"],
+    status: "not-started",
+    url: "https://leetcode.com/problems/3sum/",
+  },
+  {
+    id: 14,
+    title: "Container With Most Water",
+    difficulty: "Medium",
+    description:
+      "Find two lines that together with the x-axis form a container holding the most water.",
+    topics: ["Array", "Two Pointers", "Greedy"],
+    status: "not-started",
+    url: "https://leetcode.com/problems/container-with-most-water/",
+  },
+  {
+    id: 15,
+    title: "Subarray Sum Equals K",
+    difficulty: "Medium",
+    description: "Count the number of subarrays whose sum equals k.",
+    topics: ["Array", "Hash Table", "Prefix Sum"],
+    status: "not-started",
+    url: "https://leetcode.com/problems/subarray-sum-equals-k/",
+  },
+  {
+    id: 16,
+    title: "Trapping Rain Water",
+    difficulty: "Hard",
+    description:
+      "Calculate how much rainwater can be trapped between the bars of an elevation map.",
+    topics: ["Array", "Two Pointers", "Dynamic Programming", "Stack"],
+    status: "not-started",
+    url: "https://leetcode.com/problems/trapping-rain-water/",
+  },
 ];
 const arrayProblemsContainer = document.querySelector(".array-problems");
+const resetFiltersButton = document.querySelector("#resetFilters");
+const problemSearch = document.querySelector("#problemSearch");
+const problemSort = document.querySelector("#problemSort");
+
 let currentDifficulty = "all";
 let currentStatus = "all";
-const resetFiltersButton = document.querySelector(
-    "#resetFilters",
-);
+let currentSearch = "";
+let currentSort = "default";
 
 function loadArrayProblems() {
   const savedProblems = localStorage.getItem(DSA_STORAGE_KEY);
@@ -747,14 +826,53 @@ function renderArrayProblems() {
   }
 
   const filteredProblems = arrayProblems.filter((problem) => {
+    const searchText = currentSearch.toLowerCase();
+
+    const matchesSearch =
+      problem.title.toLowerCase().includes(searchText) ||
+      problem.description.toLowerCase().includes(searchText) ||
+      problem.topics.some((topic) => topic.toLowerCase().includes(searchText));
+
     const matchesDifficulty =
       currentDifficulty === "all" || problem.difficulty === currentDifficulty;
 
     const matchesStatus =
       currentStatus === "all" || problem.status === currentStatus;
 
-    return matchesDifficulty && matchesStatus;
+    return matchesSearch && matchesDifficulty && matchesStatus;
   });
+
+  if (currentSort === "name-asc") {
+    filteredProblems.sort((a, b) => a.title.localeCompare(b.title));
+  }
+
+  if (currentSort === "name-desc") {
+    filteredProblems.sort((a, b) => b.title.localeCompare(a.title));
+  }
+
+  if (currentSort === "difficulty") {
+    const difficultyOrder = {
+      Easy: 1,
+      Medium: 2,
+      Hard: 3,
+    };
+
+    filteredProblems.sort(
+      (a, b) => difficultyOrder[a.difficulty] - difficultyOrder[b.difficulty],
+    );
+  }
+
+  if (currentSort === "status") {
+    const statusOrder = {
+      "not-started": 1,
+      "in-progress": 2,
+      solved: 3,
+    };
+
+    filteredProblems.sort(
+      (a, b) => statusOrder[a.status] - statusOrder[b.status],
+    );
+  }
 
   arrayProblemsContainer.innerHTML = "";
 
@@ -863,6 +981,20 @@ function setupProblemFilters() {
   }
 }
 
+function setupProblemSearch() {
+  if (!problemSearch) {
+    return;
+  }
+
+  problemSearch.addEventListener("input", function () {
+    currentSearch = this.value.trim();
+
+    renderArrayProblems();
+    setupProblemButtons();
+    setupProblemStatus();
+  });
+}
+
 function setupResetFilters() {
   if (!resetFiltersButton) {
     return;
@@ -871,14 +1003,20 @@ function setupResetFilters() {
   resetFiltersButton.addEventListener("click", function () {
     currentDifficulty = "all";
     currentStatus = "all";
+    currentSearch = "";
+    currentSort = "default";
 
-    const difficultyButtons = document.querySelectorAll(
-      ".difficulty-filter",
-    );
+    if (problemSearch) {
+      problemSearch.value = "";
+    }
 
-    const statusButtons = document.querySelectorAll(
-      ".status-filter",
-    );
+    if (problemSort) {
+      problemSort.value = "default";
+    }
+
+    const difficultyButtons = document.querySelectorAll(".difficulty-filter");
+
+    const statusButtons = document.querySelectorAll(".status-filter");
 
     for (const button of difficultyButtons) {
       button.classList.remove("active");
@@ -952,6 +1090,20 @@ function setupProblemStatus() {
   }
 }
 
+function setupProblemSort() {
+  if (!problemSort) {
+    return;
+  }
+
+  problemSort.addEventListener("change", function () {
+    currentSort = this.value;
+
+    renderArrayProblems();
+    setupProblemButtons();
+    setupProblemStatus();
+  });
+}
+
 if (arrayProblemsContainer) {
   loadArrayProblems();
   renderArrayProblems();
@@ -959,5 +1111,7 @@ if (arrayProblemsContainer) {
   setupProblemStatus();
   setupProblemFilters();
   setupResetFilters();
+  setupProblemSearch();
+  setupProblemSort();
   updateArrayProgress();
 }

@@ -31,7 +31,9 @@
           <span class="shortcut">Ctrl + K</span>
         </div>
 
-        <button class="notification-btn" aria-label="Notifications">🔔</button>
+        <button class="notification-btn" aria-label="Notifications">
+          🔔
+        </button>
 
         <button class="profile-btn" aria-label="Open profile menu">
           <span>Fazal</span>
@@ -82,12 +84,29 @@
             </div>
 
             <div class="array-progress-bar">
-              <div class="array-progress-fill" id="arrayProgressFill"></div>
+              <div
+                class="array-progress-fill"
+                id="arrayProgressFill"
+              ></div>
             </div>
           </div>
 
+          <!-- Problem Search -->
+          <div class="problem-search">
+            <span class="problem-search-icon">🔍</span>
+
+            <input
+              type="text"
+              id="problemSearch"
+              placeholder="Search problems..."
+              autocomplete="off"
+            />
+          </div>
+
+          <!-- Problem Filters -->
           <div class="problem-filter-area">
             <div class="problem-filter-groups">
+              <!-- Difficulty -->
               <div class="problem-filter-group">
                 <span>Difficulty</span>
 
@@ -122,6 +141,7 @@
                 </div>
               </div>
 
+              <!-- Status -->
               <div class="problem-filter-group">
                 <span>Status</span>
 
@@ -157,11 +177,27 @@
               </div>
             </div>
 
-            <button class="reset-filters-btn" id="resetFilters">
-              Reset Filters
-            </button>
+            <!-- Sort + Reset -->
+            <div class="problem-filter-actions">
+              <div class="problem-sort">
+                <label for="problemSort">Sort by</label>
+
+                <select id="problemSort">
+                  <option value="default">Default</option>
+                  <option value="name-asc">Name A–Z</option>
+                  <option value="name-desc">Name Z–A</option>
+                  <option value="difficulty">Difficulty</option>
+                  <option value="status">Status</option>
+                </select>
+              </div>
+
+              <button class="reset-filters-btn" id="resetFilters">
+                Reset Filters
+              </button>
+            </div>
           </div>
 
+          <!-- Problem Cards -->
           <div class="array-problems"></div>
         </div>
       </section>
