@@ -86,74 +86,80 @@
             </div>
           </div>
 
-          <div class="problem-filter-groups">
-            <div class="problem-filter-group">
-              <span>Difficulty</span>
+          <div class="problem-filter-area">
+            <div class="problem-filter-groups">
+              <div class="problem-filter-group">
+                <span>Difficulty</span>
 
-              <div class="problem-filters">
-                <button
-                  class="problem-filter difficulty-filter active"
-                  data-difficulty="all"
-                >
-                  All
-                </button>
+                <div class="problem-filters">
+                  <button
+                    class="problem-filter difficulty-filter active"
+                    data-difficulty="all"
+                  >
+                    All
+                  </button>
 
-                <button
-                  class="problem-filter difficulty-filter"
-                  data-difficulty="Easy"
-                >
-                  Easy
-                </button>
+                  <button
+                    class="problem-filter difficulty-filter"
+                    data-difficulty="Easy"
+                  >
+                    Easy
+                  </button>
 
-                <button
-                  class="problem-filter difficulty-filter"
-                  data-difficulty="Medium"
-                >
-                  Medium
-                </button>
+                  <button
+                    class="problem-filter difficulty-filter"
+                    data-difficulty="Medium"
+                  >
+                    Medium
+                  </button>
 
-                <button
-                  class="problem-filter difficulty-filter"
-                  data-difficulty="Hard"
-                >
-                  Hard
-                </button>
+                  <button
+                    class="problem-filter difficulty-filter"
+                    data-difficulty="Hard"
+                  >
+                    Hard
+                  </button>
+                </div>
+              </div>
+
+              <div class="problem-filter-group">
+                <span>Status</span>
+
+                <div class="problem-filters">
+                  <button
+                    class="problem-filter status-filter active"
+                    data-status="all"
+                  >
+                    All
+                  </button>
+
+                  <button
+                    class="problem-filter status-filter"
+                    data-status="not-started"
+                  >
+                    Not Started
+                  </button>
+
+                  <button
+                    class="problem-filter status-filter"
+                    data-status="in-progress"
+                  >
+                    In Progress
+                  </button>
+
+                  <button
+                    class="problem-filter status-filter"
+                    data-status="solved"
+                  >
+                    Solved
+                  </button>
+                </div>
               </div>
             </div>
 
-            <div class="problem-filter-group">
-              <span>Status</span>
-
-              <div class="problem-filters">
-                <button
-                  class="problem-filter status-filter active"
-                  data-status="all"
-                >
-                  All
-                </button>
-
-                <button
-                  class="problem-filter status-filter"
-                  data-status="not-started"
-                >
-                  Not Started
-                </button>
-
-                <button
-                  class="problem-filter status-filter"
-                  data-status="in-progress"
-                >
-                  In Progress
-                </button>
-
-                <button
-                  class="problem-filter status-filter"
-                  data-status="solved"
-                >
-                  Solved
-                </button>
-              </div>
-            </div>
+            <button class="reset-filters-btn" id="resetFilters">
+              Reset Filters
+            </button>
           </div>
 
           <div class="array-problems"></div>

@@ -695,6 +695,9 @@ const arrayProblems = [
 const arrayProblemsContainer = document.querySelector(".array-problems");
 let currentDifficulty = "all";
 let currentStatus = "all";
+const resetFiltersButton = document.querySelector(
+    "#resetFilters",
+);
 
 function loadArrayProblems() {
   const savedProblems = localStorage.getItem(DSA_STORAGE_KEY);
@@ -860,6 +863,45 @@ function setupProblemFilters() {
   }
 }
 
+function setupResetFilters() {
+  if (!resetFiltersButton) {
+    return;
+  }
+
+  resetFiltersButton.addEventListener("click", function () {
+    currentDifficulty = "all";
+    currentStatus = "all";
+
+    const difficultyButtons = document.querySelectorAll(
+      ".difficulty-filter",
+    );
+
+    const statusButtons = document.querySelectorAll(
+      ".status-filter",
+    );
+
+    for (const button of difficultyButtons) {
+      button.classList.remove("active");
+    }
+
+    for (const button of statusButtons) {
+      button.classList.remove("active");
+    }
+
+    document
+      .querySelector('.difficulty-filter[data-difficulty="all"]')
+      .classList.add("active");
+
+    document
+      .querySelector('.status-filter[data-status="all"]')
+      .classList.add("active");
+
+    renderArrayProblems();
+    setupProblemButtons();
+    setupProblemStatus();
+  });
+}
+
 function setupProblemButtons() {
   if (!arrayProblemsContainer) {
     return;
@@ -916,5 +958,6 @@ if (arrayProblemsContainer) {
   setupProblemButtons();
   setupProblemStatus();
   setupProblemFilters();
+  setupResetFilters();
   updateArrayProgress();
 }
