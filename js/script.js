@@ -1086,6 +1086,7 @@ function setupProblemStatus() {
       localStorage.setItem(DSA_STORAGE_KEY, JSON.stringify(arrayProblems));
 
       updateArrayProgress();
+      updateArraysTopicProgress();
     });
   }
 }
@@ -1104,8 +1105,42 @@ function setupProblemSort() {
   });
 }
 
+function updateArraysTopicProgress() {
+  const progressPercent = document.querySelector(
+    "#arraysTopicProgressPercent",
+  );
+
+  const progressFill = document.querySelector(
+    "#arraysTopicProgressFill",
+  );
+
+  const progressText = document.querySelector(
+    "#arraysTopicProgressText",
+  );
+
+  if (!progressPercent || !progressFill || !progressText) {
+    return;
+  }
+
+  const total = arrayProblems.length;
+
+  const solved = arrayProblems.filter(
+    (problem) => problem.status === "solved",
+  ).length;
+
+  const percentage =
+    total === 0 ? 0 : Math.round((solved / total) * 100);
+
+  progressPercent.textContent = `${percentage}%`;
+
+  progressFill.style.width = `${percentage}%`;
+
+  progressText.textContent = `${solved} / ${total} solved`;
+}
+
+loadArrayProblems();
+
 if (arrayProblemsContainer) {
-  loadArrayProblems();
   renderArrayProblems();
   setupProblemButtons();
   setupProblemStatus();
@@ -1115,3 +1150,5 @@ if (arrayProblemsContainer) {
   setupProblemSort();
   updateArrayProgress();
 }
+
+updateArraysTopicProgress();
