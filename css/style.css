@@ -1322,7 +1322,8 @@ input:focus-visible {
 /* DSA PROBLEMS */
 /* ========================= */
 
-.array-problems {
+.array-problems,
+.binary-search-problems {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 16px;
@@ -1330,13 +1331,15 @@ input:focus-visible {
 }
 
 @media (max-width: 1100px) {
-  .array-problems {
+  .array-problems,
+  .binary-search-problems {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
 @media (max-width: 650px) {
-  .array-problems {
+  .array-problems,
+  .binary-search-problems {
     grid-template-columns: 1fr;
   }
 }

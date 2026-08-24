@@ -614,6 +614,7 @@ if (projectForm) {
 // =========================
 
 const DSA_STORAGE_KEY = "dsaProblems";
+const BINARY_SEARCH_STORAGE_KEY = "engineerOSBinarySearchProblems";
 const arrayProblems = [
   {
     id: 1,
@@ -768,126 +769,204 @@ const arrayProblems = [
     url: "https://leetcode.com/problems/trapping-rain-water/",
   },
 ];
+const binarySearchProblems = [
+  {
+    id: 1,
+    title: "Binary Search",
+    difficulty: "Easy",
+    description: "Search for a target value in a sorted array.",
+    topics: ["Array", "Binary Search"],
+    status: "not-started",
+    url: "https://leetcode.com/problems/binary-search/",
+  },
+  {
+    id: 2,
+    title: "Search Insert Position",
+    difficulty: "Easy",
+    description:
+      "Find the index where a target should be inserted in a sorted array.",
+    topics: ["Array", "Binary Search"],
+    status: "not-started",
+    url: "https://leetcode.com/problems/search-insert-position/",
+  },
+  {
+    id: 3,
+    title: "Search in Rotated Sorted Array",
+    difficulty: "Medium",
+    description: "Search for a target in a rotated sorted array.",
+    topics: ["Array", "Binary Search"],
+    status: "not-started",
+    url: "https://leetcode.com/problems/search-in-rotated-sorted-array/",
+  },
+  {
+    id: 4,
+    title: "Find Minimum in Rotated Sorted Array",
+    difficulty: "Medium",
+    description: "Find the minimum element in a rotated sorted array.",
+    topics: ["Array", "Binary Search"],
+    status: "not-started",
+    url: "https://leetcode.com/problems/find-minimum-in-rotated-sorted-array/",
+  },
+  {
+    id: 5,
+    title: "Find Peak Element",
+    difficulty: "Medium",
+    description: "Find a peak element in an array using binary search.",
+    topics: ["Array", "Binary Search"],
+    status: "not-started",
+    url: "https://leetcode.com/problems/find-peak-element/",
+  },
+  {
+    id: 6,
+    title: "Koko Eating Bananas",
+    difficulty: "Medium",
+    description:
+      "Find the minimum eating speed needed to finish all bananas within the given hours.",
+    topics: ["Binary Search", "Greedy"],
+    status: "not-started",
+    url: "https://leetcode.com/problems/koko-eating-bananas/",
+  },
+  {
+    id: 7,
+    title: "Capacity To Ship Packages Within D Days",
+    difficulty: "Medium",
+    description:
+      "Find the minimum ship capacity needed to deliver all packages within the given number of days.",
+    topics: ["Binary Search", "Greedy"],
+    status: "not-started",
+    url: "https://leetcode.com/problems/capacity-to-ship-packages-within-d-days/",
+  },
+];
+const dsaTopics = {
+  arrays: {
+    problems: arrayProblems,
+    storageKey: DSA_STORAGE_KEY,
+  },
+
+  "binary-search": {
+    problems: binarySearchProblems,
+    storageKey: BINARY_SEARCH_STORAGE_KEY,
+  },
+};
 const arrayProblemsContainer = document.querySelector(".array-problems");
+const binarySearchProblemsContainer = document.querySelector(
+  ".binary-search-problems",
+);
+const binarySearchProblemSearch = document.querySelector(
+  "#binarySearchProblemSearch",
+);
+const binarySearchResetFiltersButton = document.querySelector(
+  "#resetBinarySearchFilters",
+);
 const resetFiltersButton = document.querySelector("#resetFilters");
 const problemSearch = document.querySelector("#problemSearch");
 const problemSort = document.querySelector("#problemSort");
+const binarySearchProblemSort = document.querySelector(
+  "#binarySearchProblemSort",
+);
+const arrayProgressElements = {
+  total: document.querySelector("#arrayTotal"),
+  solved: document.querySelector("#arraySolved"),
+  inProgress: document.querySelector("#arrayInProgress"),
+  percent: document.querySelector("#arrayProgressPercent"),
+  fill: document.querySelector("#arrayProgressFill"),
+};
+const arraysTopicProgressElements = {
+  percent: document.querySelector("#arraysTopicProgressPercent"),
+  fill: document.querySelector("#arraysTopicProgressFill"),
+  text: document.querySelector("#arraysTopicProgressText"),
+};
+const binarySearchTopicProgressElements = {
+  percent: document.querySelector("#binarySearchTopicProgressPercent"),
+  fill: document.querySelector("#binarySearchTopicProgressFill"),
+  text: document.querySelector("#binarySearchTopicProgressText"),
+};
+const binarySearchProgressElements = {
+  total: document.querySelector("#binarySearchTotal"),
+  solved: document.querySelector("#binarySearchSolved"),
+  inProgress: document.querySelector("#binarySearchInProgress"),
+  percent: document.querySelector("#binarySearchProgressPercent"),
+  fill: document.querySelector("#binarySearchProgressFill"),
+};
 
-let currentDifficulty = "all";
-let currentStatus = "all";
-let currentSearch = "";
-let currentSort = "default";
+const dsaFilterState = {
+  arrays: {
+    difficulty: "all",
+    status: "all",
+    search: "",
+    sort: "default",
+  },
 
-function loadArrayProblems() {
-  const savedProblems = localStorage.getItem(DSA_STORAGE_KEY);
+  "binary-search": {
+    difficulty: "all",
+    status: "all",
+    search: "",
+    sort: "default",
+  },
+};
 
-  if (savedProblems) {
-    const savedData = JSON.parse(savedProblems);
+function loadDSAProblems(topic) {
+  const topicData = dsaTopics[topic];
 
-    for (const problem of arrayProblems) {
-      const savedProblem = savedData.find(
-        (savedProblem) => savedProblem.id === problem.id,
-      );
+  if (!topicData) {
+    return;
+  }
 
-      if (savedProblem) {
-        problem.status = savedProblem.status;
-      }
+  const savedProblems = localStorage.getItem(topicData.storageKey);
+
+  if (!savedProblems) {
+    return;
+  }
+
+  const savedData = JSON.parse(savedProblems);
+
+  for (const problem of topicData.problems) {
+    const savedProblem = savedData.find(
+      (savedProblem) => savedProblem.id === problem.id,
+    );
+
+    if (savedProblem) {
+      problem.status = savedProblem.status;
     }
   }
 }
 
-function updateArrayProgress() {
-  const total = arrayProblems.length;
+function updateDSAProgress(topic, elements) {
+  const topicData = dsaTopics[topic];
 
-  const solved = arrayProblems.filter(
+  if (!topicData || !elements) {
+    return;
+  }
+
+  const total = topicData.problems.length;
+
+  const solved = topicData.problems.filter(
     (problem) => problem.status === "solved",
   ).length;
 
-  const inProgress = arrayProblems.filter(
+  const inProgress = topicData.problems.filter(
     (problem) => problem.status === "in-progress",
   ).length;
 
   const progressPercent = total === 0 ? 0 : Math.round((solved / total) * 100);
 
-  document.querySelector("#arrayTotal").textContent = total;
-  document.querySelector("#arraySolved").textContent = solved;
-  document.querySelector("#arrayInProgress").textContent = inProgress;
+  elements.total.textContent = total;
+  elements.solved.textContent = solved;
+  elements.inProgress.textContent = inProgress;
 
-  document.querySelector("#arrayProgressPercent").textContent =
-    `${progressPercent}%`;
+  elements.percent.textContent = `${progressPercent}%`;
 
-  document.querySelector("#arrayProgressFill").style.width =
-    `${progressPercent}%`;
+  elements.fill.style.width = `${progressPercent}%`;
 }
 
-function renderArrayProblems() {
-  if (!arrayProblemsContainer) {
+function renderDSAProblems(problems, container) {
+  if (!container) {
     return;
   }
 
-  const filteredProblems = arrayProblems.filter((problem) => {
-    const searchText = currentSearch.toLowerCase();
+  container.innerHTML = "";
 
-    const matchesSearch =
-      problem.title.toLowerCase().includes(searchText) ||
-      problem.description.toLowerCase().includes(searchText) ||
-      problem.topics.some((topic) => topic.toLowerCase().includes(searchText));
-
-    const matchesDifficulty =
-      currentDifficulty === "all" || problem.difficulty === currentDifficulty;
-
-    const matchesStatus =
-      currentStatus === "all" || problem.status === currentStatus;
-
-    return matchesSearch && matchesDifficulty && matchesStatus;
-  });
-
-  if (currentSort === "name-asc") {
-    filteredProblems.sort((a, b) => a.title.localeCompare(b.title));
-  }
-
-  if (currentSort === "name-desc") {
-    filteredProblems.sort((a, b) => b.title.localeCompare(a.title));
-  }
-
-  if (currentSort === "difficulty") {
-    const difficultyOrder = {
-      Easy: 1,
-      Medium: 2,
-      Hard: 3,
-    };
-
-    filteredProblems.sort(
-      (a, b) => difficultyOrder[a.difficulty] - difficultyOrder[b.difficulty],
-    );
-  }
-
-  if (currentSort === "status") {
-    const statusOrder = {
-      "not-started": 1,
-      "in-progress": 2,
-      solved: 3,
-    };
-
-    filteredProblems.sort(
-      (a, b) => statusOrder[a.status] - statusOrder[b.status],
-    );
-  }
-
-  arrayProblemsContainer.innerHTML = "";
-
-  if (filteredProblems.length === 0) {
-    arrayProblemsContainer.innerHTML = `
-    <div class="problem-empty-state">
-      <strong>No problems yet</strong>
-      <span>No ${currentDifficulty} problems have been added.</span>
-    </div>
-  `;
-
-    return;
-  }
-
-  for (const problem of filteredProblems) {
+  for (const problem of problems) {
     const problemCard = document.createElement("article");
 
     problemCard.className = "dsa-problem-card";
@@ -939,18 +1018,105 @@ function renderArrayProblems() {
       </div>
     `;
 
-    arrayProblemsContainer.appendChild(problemCard);
+    container.appendChild(problemCard);
   }
 }
 
-function setupProblemFilters() {
+function renderDSAProblemsWithFilters(topic, container) {
+  if (!container) {
+    return;
+  }
+
+  const topicData = dsaTopics[topic];
+  const filters = dsaFilterState[topic];
+
+  if (!topicData || !filters) {
+    return;
+  }
+
+  const filteredProblems = topicData.problems.filter((problem) => {
+    const searchText = filters.search.toLowerCase();
+
+    const matchesSearch =
+      problem.title.toLowerCase().includes(searchText) ||
+      problem.description.toLowerCase().includes(searchText) ||
+      problem.topics.some((topic) => topic.toLowerCase().includes(searchText));
+
+    const matchesDifficulty =
+      filters.difficulty === "all" || problem.difficulty === filters.difficulty;
+
+    const matchesStatus =
+      filters.status === "all" || problem.status === filters.status;
+
+    return matchesSearch && matchesDifficulty && matchesStatus;
+  });
+
+  if (filters.sort === "name-asc") {
+    filteredProblems.sort((a, b) => a.title.localeCompare(b.title));
+  }
+
+  if (filters.sort === "name-desc") {
+    filteredProblems.sort((a, b) => b.title.localeCompare(a.title));
+  }
+
+  if (filters.sort === "difficulty") {
+    const difficultyOrder = {
+      Easy: 1,
+      Medium: 2,
+      Hard: 3,
+    };
+
+    filteredProblems.sort(
+      (a, b) => difficultyOrder[a.difficulty] - difficultyOrder[b.difficulty],
+    );
+  }
+
+  if (filters.sort === "status") {
+    const statusOrder = {
+      "not-started": 1,
+      "in-progress": 2,
+      solved: 3,
+    };
+
+    filteredProblems.sort(
+      (a, b) => statusOrder[a.status] - statusOrder[b.status],
+    );
+  }
+
+  container.innerHTML = "";
+
+  if (filteredProblems.length === 0) {
+    container.innerHTML = `
+      <div class="problem-empty-state">
+        <strong>No problems found</strong>
+        <span>No problems match your current filters.</span>
+      </div>
+    `;
+
+    return;
+  }
+
+  renderDSAProblems(filteredProblems, container);
+}
+
+function setupDSAFilters(topic, container) {
+  if (!container) {
+    return;
+  }
+
+  const filters = dsaFilterState[topic];
+
+  if (!filters) {
+    return;
+  }
+
   const difficultyButtons = document.querySelectorAll(".difficulty-filter");
 
   const statusButtons = document.querySelectorAll(".status-filter");
 
   for (const button of difficultyButtons) {
     button.addEventListener("click", function () {
-      currentDifficulty = this.dataset.difficulty;
+      filters.difficulty = this.dataset.difficulty;
 
       for (const difficultyButton of difficultyButtons) {
         difficultyButton.classList.remove("active");
@@ -958,15 +1124,15 @@ function setupProblemFilters() {
 
       this.classList.add("active");
 
-      renderArrayProblems();
-      setupProblemButtons();
-      setupProblemStatus();
+      renderDSAProblemsWithFilters(topic, container);
+      setupDSAButtons(container);
+      setupDSAStatus(topic, container);
     });
   }
 
   for (const button of statusButtons) {
     button.addEventListener("click", function () {
-      currentStatus = this.dataset.status;
+      filters.status = this.dataset.status;
 
       for (const statusButton of statusButtons) {
         statusButton.classList.remove("active");
@@ -974,45 +1140,58 @@ function setupProblemFilters() {
 
       this.classList.add("active");
 
-      renderArrayProblems();
-      setupProblemButtons();
-      setupProblemStatus();
+      renderDSAProblemsWithFilters(topic, container);
+      setupDSAButtons(container);
+      setupDSAStatus(topic, container);
     });
   }
 }
 
-function setupProblemSearch() {
-  if (!problemSearch) {
+function setupDSASearch(topic, container, searchInput) {
+  if (!container || !searchInput) {
     return;
   }
 
-  problemSearch.addEventListener("input", function () {
-    currentSearch = this.value.trim();
+  const filters = dsaFilterState[topic];
 
-    renderArrayProblems();
-    setupProblemButtons();
-    setupProblemStatus();
+  if (!filters) {
+    return;
+  }
+
+  searchInput.addEventListener("input", function () {
+    filters.search = this.value.trim();
+
+    renderDSAProblemsWithFilters(topic, container);
+    setupDSAButtons(container);
+    setupDSAStatus(topic, container);
   });
 }
 
-function setupResetFilters() {
-  if (!resetFiltersButton) {
+function setupDSAResetFilters(
+  topic,
+  container,
+  searchInput,
+  sortSelect,
+  resetButton,
+) {
+  if (!container || !searchInput || !sortSelect || !resetButton) {
     return;
   }
 
-  resetFiltersButton.addEventListener("click", function () {
-    currentDifficulty = "all";
-    currentStatus = "all";
-    currentSearch = "";
-    currentSort = "default";
+  const filters = dsaFilterState[topic];
 
-    if (problemSearch) {
-      problemSearch.value = "";
-    }
+  if (!filters) {
+    return;
+  }
 
-    if (problemSort) {
-      problemSort.value = "default";
-    }
+  resetButton.addEventListener("click", function () {
+    filters.difficulty = "all";
+    filters.status = "all";
+    filters.search = "";
+    filters.sort = "default";
+
+    searchInput.value = "";
+    sortSelect.value = "default";
 
     const difficultyButtons = document.querySelectorAll(".difficulty-filter");
 
@@ -1026,27 +1205,34 @@ function setupResetFilters() {
       button.classList.remove("active");
     }
 
-    document
-      .querySelector('.difficulty-filter[data-difficulty="all"]')
-      .classList.add("active");
+    const allDifficultyButton = document.querySelector(
+      '.difficulty-filter[data-difficulty="all"]',
+    );
 
-    document
-      .querySelector('.status-filter[data-status="all"]')
-      .classList.add("active");
+    const allStatusButton = document.querySelector(
+      '.status-filter[data-status="all"]',
+    );
 
-    renderArrayProblems();
-    setupProblemButtons();
-    setupProblemStatus();
+    if (allDifficultyButton) {
+      allDifficultyButton.classList.add("active");
+    }
+
+    if (allStatusButton) {
+      allStatusButton.classList.add("active");
+    }
+
+    renderDSAProblemsWithFilters(topic, container);
+    setupDSAButtons(container);
+    setupDSAStatus(topic, container);
   });
 }
 
-function setupProblemButtons() {
-  if (!arrayProblemsContainer) {
+function setupDSAButtons(container) {
+  if (!container) {
     return;
   }
 
-  const solveButtons =
-    arrayProblemsContainer.querySelectorAll(".problem-solve-btn");
+  const solveButtons = container.querySelectorAll(".problem-solve-btn");
 
   for (const button of solveButtons) {
     button.addEventListener("click", function () {
@@ -1055,19 +1241,31 @@ function setupProblemButtons() {
   }
 }
 
-function setupProblemStatus() {
-  if (!arrayProblemsContainer) {
+function setupDSAStatus(
+  topic,
+  container,
+  progressElements,
+  topicProgressElements,
+) {
+  if (!container) {
     return;
   }
 
-  const statusSelects = arrayProblemsContainer.querySelectorAll(
-    ".problem-status-select",
-  );
+  const topicData = dsaTopics[topic];
+
+  if (!topicData) {
+    return;
+  }
+
+  const statusSelects = container.querySelectorAll(".problem-status-select");
 
   for (const select of statusSelects) {
     select.addEventListener("change", function () {
       const problemId = Number(this.dataset.id);
-      const problem = arrayProblems.find((problem) => problem.id === problemId);
+
+      const problem = topicData.problems.find(
+        (problem) => problem.id === problemId,
+      );
 
       if (!problem) {
         return;
@@ -1083,72 +1281,116 @@ function setupProblemStatus() {
 
       this.classList.add(`status-${problem.status}`);
 
-      localStorage.setItem(DSA_STORAGE_KEY, JSON.stringify(arrayProblems));
+      localStorage.setItem(
+        topicData.storageKey,
+        JSON.stringify(topicData.problems),
+      );
 
-      updateArrayProgress();
-      updateArraysTopicProgress();
+      updateDSAProgress(topic, progressElements);
+
+      updateDSATopicProgress(topic, topicProgressElements);
     });
   }
 }
 
-function setupProblemSort() {
-  if (!problemSort) {
+function setupDSASort(topic, container, sortSelect) {
+  if (!container || !sortSelect) {
     return;
   }
 
-  problemSort.addEventListener("change", function () {
-    currentSort = this.value;
+  const filters = dsaFilterState[topic];
 
-    renderArrayProblems();
-    setupProblemButtons();
-    setupProblemStatus();
+  if (!filters) {
+    return;
+  }
+
+  sortSelect.addEventListener("change", function () {
+    filters.sort = this.value;
+
+    renderDSAProblemsWithFilters(topic, container);
+    setupDSAButtons(container);
+    setupDSAStatus(topic, container, progressElements, topicProgressElements);
   });
 }
 
-function updateArraysTopicProgress() {
-  const progressPercent = document.querySelector(
-    "#arraysTopicProgressPercent",
-  );
+function updateDSATopicProgress(topic, elements) {
+  const topicData = dsaTopics[topic];
 
-  const progressFill = document.querySelector(
-    "#arraysTopicProgressFill",
-  );
-
-  const progressText = document.querySelector(
-    "#arraysTopicProgressText",
-  );
-
-  if (!progressPercent || !progressFill || !progressText) {
+  if (
+    !topicData ||
+    !elements ||
+    !elements.percent ||
+    !elements.fill ||
+    !elements.text
+  ) {
     return;
   }
 
-  const total = arrayProblems.length;
+  const total = topicData.problems.length;
 
-  const solved = arrayProblems.filter(
+  const solved = topicData.problems.filter(
     (problem) => problem.status === "solved",
   ).length;
 
-  const percentage =
-    total === 0 ? 0 : Math.round((solved / total) * 100);
+  const percentage = total === 0 ? 0 : Math.round((solved / total) * 100);
 
-  progressPercent.textContent = `${percentage}%`;
-
-  progressFill.style.width = `${percentage}%`;
-
-  progressText.textContent = `${solved} / ${total} solved`;
+  elements.percent.textContent = `${percentage}%`;
+  elements.fill.style.width = `${percentage}%`;
+  elements.text.textContent = `${solved} / ${total} solved`;
 }
 
-loadArrayProblems();
+loadDSAProblems("arrays");
 
 if (arrayProblemsContainer) {
-  renderArrayProblems();
-  setupProblemButtons();
-  setupProblemStatus();
-  setupProblemFilters();
-  setupResetFilters();
-  setupProblemSearch();
-  setupProblemSort();
-  updateArrayProgress();
+  renderDSAProblemsWithFilters("arrays", arrayProblemsContainer);
+  setupDSAButtons(arrayProblemsContainer);
+  setupDSAStatus(
+    "arrays",
+    arrayProblemsContainer,
+    arrayProgressElements,
+    arraysTopicProgressElements,
+  );
+  setupDSAFilters("arrays", arrayProblemsContainer);
+  setupDSASearch("arrays", arrayProblemsContainer, problemSearch);
+  setupDSASort("arrays", arrayProblemsContainer, problemSort);
+  setupDSAResetFilters(
+    "arrays",
+    arrayProblemsContainer,
+    problemSearch,
+    problemSort,
+    resetFiltersButton,
+  );
+  updateDSAProgress("arrays", arrayProgressElements);
 }
+updateDSATopicProgress("arrays", arraysTopicProgressElements);
 
-updateArraysTopicProgress();
+if (binarySearchProblemsContainer) {
+  loadDSAProblems("binary-search");
+  renderDSAProblemsWithFilters("binary-search", binarySearchProblemsContainer);
+  setupDSAButtons(binarySearchProblemsContainer);
+  setupDSAStatus(
+    "binary-search",
+    binarySearchProblemsContainer,
+    binarySearchProgressElements,
+    binarySearchTopicProgressElements,
+  );
+  setupDSAFilters("binary-search", binarySearchProblemsContainer);
+  setupDSASearch(
+    "binary-search",
+    binarySearchProblemsContainer,
+    binarySearchProblemSearch,
+  );
+  setupDSASort(
+    "binary-search",
+    binarySearchProblemsContainer,
+    binarySearchProblemSort,
+  );
+  setupDSAResetFilters(
+    "binary-search",
+    binarySearchProblemsContainer,
+    binarySearchProblemSearch,
+    binarySearchProblemSort,
+    binarySearchResetFiltersButton,
+  );
+  updateDSAProgress("binary-search", binarySearchProgressElements);
+}
