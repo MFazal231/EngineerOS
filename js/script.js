@@ -1340,6 +1340,7 @@ function updateDSATopicProgress(topic, elements) {
 }
 
 loadDSAProblems("arrays");
+loadDSAProblems("binary-search");
 
 if (arrayProblemsContainer) {
   renderDSAProblemsWithFilters("arrays", arrayProblemsContainer);
@@ -1363,6 +1364,7 @@ if (arrayProblemsContainer) {
   updateDSAProgress("arrays", arrayProgressElements);
 }
 updateDSATopicProgress("arrays", arraysTopicProgressElements);
+updateDSATopicProgress("binary-search", binarySearchTopicProgressElements);
 
 if (binarySearchProblemsContainer) {
   loadDSAProblems("binary-search");
