@@ -1396,3 +1396,8 @@ if (binarySearchProblemsContainer) {
   );
   updateDSAProgress("binary-search", binarySearchProgressElements);
 }
+
+// String.prototype.replaceAll = function (search, replacement) {
+//   const target = this;
+//   return target.split(search).join(replacement);
+// };
