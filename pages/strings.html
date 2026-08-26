@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="stylesheet" href="../css/style.css" />
+
+    <title>Strings — EngineerOS</title>
+  </head>
+
+  <body>
+    <header class="header">
+      <div class="logo">
+        <span class="logo-icon">🚀</span>
+        <h1>Engineer<span class="accent">OS</span></h1>
+      </div>
+
+      <nav class="nav" aria-label="Main Navigation">
+        <a href="../index.html">Dashboard</a>
+        <a href="projects.html">Projects</a>
+        <a href="dsa.html" class="active">DSA</a>
+        <a href="#">Roadmap</a>
+        <a href="#">Community</a>
+      </nav>
+
+      <div class="header-actions">
+        <div class="search-box">
+          <span class="search-icon">🔍</span>
+          <input type="text" placeholder="Search..." />
+          <span class="shortcut">Ctrl + K</span>
+        </div>
+
+        <button class="notification-btn" aria-label="Notifications">
+          🔔
+        </button>
+
+        <button class="profile-btn" aria-label="Open profile menu">
+          <span>Fazal</span>
+          <span>👤</span>
+        </button>
+      </div>
+    </header>
+
+    <main class="main">
+      <section class="dsa-hero">
+        <div class="container">
+          <div class="dsa-header">
+            <div>
+              <p class="section-label">DSA / STRINGS</p>
+
+              <h2>Strings</h2>
+
+              <p>
+                Practice string manipulation, searching, and pattern problems.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="dsa-section">
+        <div class="container">
+
+          <div class="array-progress">
+            <div class="array-progress-stats">
+              <div class="progress-stat">
+                <span>Total</span>
+                <strong id="stringTotal">0</strong>
+              </div>
+
+              <div class="progress-stat">
+                <span>Solved</span>
+                <strong id="stringSolved">0</strong>
+              </div>
+
+              <div class="progress-stat">
+                <span>In Progress</span>
+                <strong id="stringInProgress">0</strong>
+              </div>
+            </div>
+
+            <div class="array-progress-header">
+              <span>Progress</span>
+              <strong id="stringProgressPercent">0%</strong>
+            </div>
+
+            <div class="array-progress-bar">
+              <div
+                class="array-progress-fill"
+                id="stringProgressFill"
+              ></div>
+            </div>
+          </div>
+
+          <div class="problem-search">
+            <span class="problem-search-icon">🔍</span>
+
+            <input
+              type="text"
+              id="stringProblemSearch"
+              placeholder="Search problems..."
+              autocomplete="off"
+            />
+          </div>
+
+          <div class="problem-filter-area">
+
+            <div class="problem-filter-groups">
+
+              <div class="problem-filter-group">
+                <span>Difficulty</span>
+
+                <div class="problem-filters">
+                  <button
+                    class="problem-filter difficulty-filter active"
+                    data-difficulty="all"
+                  >
+                    All
+                  </button>
+
+                  <button
+                    class="problem-filter difficulty-filter"
+                    data-difficulty="Easy"
+                  >
+                    Easy
+                  </button>
+
+                  <button
+                    class="problem-filter difficulty-filter"
+                    data-difficulty="Medium"
+                  >
+                    Medium
+                  </button>
+
+                  <button
+                    class="problem-filter difficulty-filter"
+                    data-difficulty="Hard"
+                  >
+                    Hard
+                  </button>
+                </div>
+              </div>
+
+              <div class="problem-filter-group">
+                <span>Status</span>
+
+                <div class="problem-filters">
+                  <button
+                    class="problem-filter status-filter active"
+                    data-status="all"
+                  >
+                    All
+                  </button>
+
+                  <button
+                    class="problem-filter status-filter"
+                    data-status="not-started"
+                  >
+                    Not Started
+                  </button>
+
+                  <button
+                    class="problem-filter status-filter"
+                    data-status="in-progress"
+                  >
+                    In Progress
+                  </button>
+
+                  <button
+                    class="problem-filter status-filter"
+                    data-status="solved"
+                  >
+                    Solved
+                  </button>
+                </div>
+              </div>
+
+            </div>
+
+            <div class="problem-filter-actions">
+
+              <div class="problem-sort">
+                <label for="stringProblemSort">Sort by</label>
+
+                <select id="stringProblemSort">
+                  <option value="default">Default</option>
+                  <option value="name-asc">Name A–Z</option>
+                  <option value="name-desc">Name Z–A</option>
+                  <option value="difficulty">Difficulty</option>
+                  <option value="status">Status</option>
+                </select>
+              </div>
+
+              <button
+                class="reset-filters-btn"
+                id="resetStringFilters"
+              >
+                Reset Filters
+              </button>
+
+            </div>
+
+          </div>
+
+          <div class="string-problems"></div>
+
+        </div>
+      </section>
+    </main>
+
+    <script src="../js/script.js"></script>
+  </body>
+</html>

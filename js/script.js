@@ -615,6 +615,7 @@ if (projectForm) {
 
 const DSA_STORAGE_KEY = "dsaProblems";
 const BINARY_SEARCH_STORAGE_KEY = "engineerOSBinarySearchProblems";
+const STRING_STORAGE_KEY = "engineerOSStrings";
 const arrayProblems = [
   {
     id: 1,
@@ -837,6 +838,76 @@ const binarySearchProblems = [
     url: "https://leetcode.com/problems/capacity-to-ship-packages-within-d-days/",
   },
 ];
+const stringProblems = [
+  {
+    id: 1,
+    title: "Valid Anagram",
+    difficulty: "Easy",
+    description: "Determine whether two strings are anagrams of each other.",
+    topics: ["Hash Table", "String", "Sorting"],
+    status: "not-started",
+    url: "https://leetcode.com/problems/valid-anagram/",
+  },
+  {
+    id: 2,
+    title: "Valid Palindrome",
+    difficulty: "Easy",
+    description:
+      "Determine whether a string reads the same forward and backward after ignoring non-alphanumeric characters.",
+    topics: ["String", "Two Pointers"],
+    status: "not-started",
+    url: "https://leetcode.com/problems/valid-palindrome/",
+  },
+  {
+    id: 3,
+    title: "Longest Common Prefix",
+    difficulty: "Easy",
+    description:
+      "Find the longest common prefix shared by all strings in an array.",
+    topics: ["String"],
+    status: "not-started",
+    url: "https://leetcode.com/problems/longest-common-prefix/",
+  },
+  {
+    id: 4,
+    title: "Longest Substring Without Repeating Characters",
+    difficulty: "Medium",
+    description:
+      "Find the length of the longest substring without repeating characters.",
+    topics: ["String", "Hash Table", "Sliding Window"],
+    status: "not-started",
+    url: "https://leetcode.com/problems/longest-substring-without-repeating-characters/",
+  },
+  {
+    id: 5,
+    title: "Group Anagrams",
+    difficulty: "Medium",
+    description: "Group strings that are anagrams of each other.",
+    topics: ["String", "Hash Table", "Sorting"],
+    status: "not-started",
+    url: "https://leetcode.com/problems/group-anagrams/",
+  },
+  {
+    id: 6,
+    title: "Longest Palindromic Substring",
+    difficulty: "Medium",
+    description:
+      "Find the longest palindromic substring within a given string.",
+    topics: ["String", "Dynamic Programming"],
+    status: "not-started",
+    url: "https://leetcode.com/problems/longest-palindromic-substring/",
+  },
+  {
+    id: 7,
+    title: "Palindromic Substrings",
+    difficulty: "Medium",
+    description:
+      "Count how many palindromic substrings exist in a given string.",
+    topics: ["String", "Dynamic Programming"],
+    status: "not-started",
+    url: "https://leetcode.com/problems/palindromic-substrings/",
+  },
+];
 const dsaTopics = {
   arrays: {
     problems: arrayProblems,
@@ -846,6 +917,11 @@ const dsaTopics = {
   "binary-search": {
     problems: binarySearchProblems,
     storageKey: BINARY_SEARCH_STORAGE_KEY,
+  },
+
+  strings: {
+    problems: stringProblems,
+    storageKey: STRING_STORAGE_KEY,
   },
 };
 const arrayProblemsContainer = document.querySelector(".array-problems");
@@ -888,6 +964,28 @@ const binarySearchProgressElements = {
   percent: document.querySelector("#binarySearchProgressPercent"),
   fill: document.querySelector("#binarySearchProgressFill"),
 };
+const dsaOverallProgressElements = {
+  percent: document.querySelector("#dsaOverallProgressPercent"),
+  fill: document.querySelector("#dsaOverallProgressFill"),
+  solved: document.querySelector("#dsaOverallSolved"),
+  activeTopics: document.querySelector("#dsaActiveTopics"),
+};
+const stringProblemsContainer = document.querySelector(".string-problems");
+const stringProblemSearch = document.querySelector("#stringProblemSearch");
+const stringProblemSort = document.querySelector("#stringProblemSort");
+const stringResetFiltersButton = document.querySelector("#resetStringFilters");
+const stringProgressElements = {
+  total: document.querySelector("#stringTotal"),
+  solved: document.querySelector("#stringSolved"),
+  inProgress: document.querySelector("#stringInProgress"),
+  percent: document.querySelector("#stringProgressPercent"),
+  fill: document.querySelector("#stringProgressFill"),
+};
+const stringTopicProgressElements = {
+  percent: document.querySelector("#stringTopicProgressPercent"),
+  fill: document.querySelector("#stringTopicProgressFill"),
+  text: document.querySelector("#stringTopicProgressText"),
+};
 
 const dsaFilterState = {
   arrays: {
@@ -898,6 +996,13 @@ const dsaFilterState = {
   },
 
   "binary-search": {
+    difficulty: "all",
+    status: "all",
+    search: "",
+    sort: "default",
+  },
+
+  strings: {
     difficulty: "all",
     status: "all",
     search: "",
@@ -1339,8 +1444,50 @@ function updateDSATopicProgress(topic, elements) {
   elements.text.textContent = `${solved} / ${total} solved`;
 }
 
+function updateDSAOverallProgress(elements) {
+  if (
+    !elements ||
+    !elements.percent ||
+    !elements.fill ||
+    !elements.solved ||
+    !elements.activeTopics
+  ) {
+    return;
+  }
+
+  let totalProblems = 0;
+  let solvedProblems = 0;
+  let activeTopics = 0;
+
+  for (const topic of Object.values(dsaTopics)) {
+    totalProblems += topic.problems.length;
+
+    solvedProblems += topic.problems.filter(
+      (problem) => problem.status === "solved",
+    ).length;
+
+    if (topic.problems.length > 0) {
+      activeTopics++;
+    }
+  }
+
+  const progressPercent =
+    totalProblems === 0
+      ? 0
+      : Math.round((solvedProblems / totalProblems) * 100);
+
+  elements.percent.textContent = `${progressPercent}%`;
+
+  elements.fill.style.width = `${progressPercent}%`;
+
+  elements.solved.textContent = `${solvedProblems} / ${totalProblems}`;
+
+  elements.activeTopics.textContent = activeTopics;
+}
+
 loadDSAProblems("arrays");
 loadDSAProblems("binary-search");
+loadDSAProblems("strings");
 
 if (arrayProblemsContainer) {
   renderDSAProblemsWithFilters("arrays", arrayProblemsContainer);
@@ -1365,6 +1512,7 @@ if (arrayProblemsContainer) {
 }
 updateDSATopicProgress("arrays", arraysTopicProgressElements);
 updateDSATopicProgress("binary-search", binarySearchTopicProgressElements);
+updateDSAOverallProgress(dsaOverallProgressElements);
 
 if (binarySearchProblemsContainer) {
   loadDSAProblems("binary-search");
@@ -1395,4 +1543,29 @@ if (binarySearchProblemsContainer) {
     binarySearchResetFiltersButton,
   );
   updateDSAProgress("binary-search", binarySearchProgressElements);
+}
+
+if (stringProblemsContainer) {
+  loadDSAProblems("strings");
+
+  renderDSAProblemsWithFilters("strings", stringProblemsContainer);
+  setupDSAButtons(stringProblemsContainer);
+  setupDSAStatus(
+    "strings",
+    stringProblemsContainer,
+    stringProgressElements,
+    stringTopicProgressElements,
+  );
+  setupDSAFilters("strings", stringProblemsContainer);
+  setupDSASearch("strings", stringProblemsContainer, stringProblemSearch);
+  setupDSASort("strings", stringProblemsContainer, stringProblemSort);
+  setupDSAResetFilters(
+    "strings",
+    stringProblemsContainer,
+    stringProblemSearch,
+    stringProblemSort,
+    stringResetFiltersButton,
+  );
+
+  updateDSAProgress("strings", stringProgressElements);
 }
