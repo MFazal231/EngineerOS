@@ -912,21 +912,22 @@ const dsaTopics = {
   arrays: {
     problems: arrayProblems,
     storageKey: DSA_STORAGE_KEY,
+    page: "arrays.html",
   },
 
   "binary-search": {
     problems: binarySearchProblems,
     storageKey: BINARY_SEARCH_STORAGE_KEY,
+    page: "binary-search.html",
   },
 
   strings: {
     problems: stringProblems,
     storageKey: STRING_STORAGE_KEY,
+    page: "strings.html",
   },
 };
-const dsaContinueCard = document.querySelector(
-  "#dsaContinueCard",
-);
+const dsaContinueCard = document.querySelector("#dsaContinueCard");
 const arrayProblemsContainer = document.querySelector(".array-problems");
 const binarySearchProblemsContainer = document.querySelector(
   ".binary-search-problems",
@@ -1543,9 +1544,7 @@ function updateDSAContinueCard() {
 
   const topicTitle = continueTopic
     .split("-")
-    .map(
-      (word) => word.charAt(0).toUpperCase() + word.slice(1),
-    )
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(" ");
 
   dsaContinueCard.innerHTML = `
@@ -1566,9 +1565,7 @@ function updateDSAContinueCard() {
     </div>
 
     <a
-      href="${continueProblem.url}"
-      target="_blank"
-      rel="noopener noreferrer"
+      href="${dsaTopics[continueTopic].page}"
       class="dsa-continue-action"
     >
       Continue →
