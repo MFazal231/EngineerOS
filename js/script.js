@@ -1512,6 +1512,7 @@ if (arrayProblemsContainer) {
 }
 updateDSATopicProgress("arrays", arraysTopicProgressElements);
 updateDSATopicProgress("binary-search", binarySearchTopicProgressElements);
+updateDSATopicProgress("strings", stringTopicProgressElements);
 updateDSAOverallProgress(dsaOverallProgressElements);
 
 if (binarySearchProblemsContainer) {
