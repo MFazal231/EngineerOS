@@ -1870,3 +1870,62 @@ input:focus-visible {
 .dsa-overall-progress-stats strong {
   color: var(--text);
 }
+
+.dsa-continue {
+  margin-bottom: 32px;
+}
+
+.dsa-continue-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 20px 24px;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+}
+
+.dsa-continue-info {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.dsa-continue-topic {
+  color: var(--text-light);
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.dsa-continue-title {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.dsa-continue-meta {
+  color: var(--text-light);
+  font-size: 0.8rem;
+}
+
+.dsa-continue-action {
+  flex-shrink: 0;
+  padding: 8px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: white;
+  color: var(--primary);
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition:
+    background-color var(--ease),
+    border-color var(--ease);
+}
+
+.dsa-continue-action:hover {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+}

@@ -924,6 +924,9 @@ const dsaTopics = {
     storageKey: STRING_STORAGE_KEY,
   },
 };
+const dsaContinueCard = document.querySelector(
+  "#dsaContinueCard",
+);
 const arrayProblemsContainer = document.querySelector(".array-problems");
 const binarySearchProblemsContainer = document.querySelector(
   ".binary-search-problems",
@@ -1394,6 +1397,8 @@ function setupDSAStatus(
       updateDSAProgress(topic, progressElements);
 
       updateDSATopicProgress(topic, topicProgressElements);
+
+      updateDSAContinueCard();
     });
   }
 }
@@ -1485,6 +1490,92 @@ function updateDSAOverallProgress(elements) {
   elements.activeTopics.textContent = activeTopics;
 }
 
+function updateDSAContinueCard() {
+  if (!dsaContinueCard) {
+    return;
+  }
+
+  let continueProblem = null;
+  let continueTopic = null;
+
+  // First priority: In Progress
+  for (const [topicName, topicData] of Object.entries(dsaTopics)) {
+    const problem = topicData.problems.find(
+      (problem) => problem.status === "in-progress",
+    );
+
+    if (problem) {
+      continueProblem = problem;
+      continueTopic = topicName;
+      break;
+    }
+  }
+
+  // Second priority: Not Started
+  if (!continueProblem) {
+    for (const [topicName, topicData] of Object.entries(dsaTopics)) {
+      const problem = topicData.problems.find(
+        (problem) => problem.status === "not-started",
+      );
+
+      if (problem) {
+        continueProblem = problem;
+        continueTopic = topicName;
+        break;
+      }
+    }
+  }
+
+  // Everything is solved
+  if (!continueProblem) {
+    dsaContinueCard.innerHTML = `
+      <div class="dsa-continue-info">
+        <span class="dsa-continue-topic">DSA</span>
+        <h4 class="dsa-continue-title">All caught up!</h4>
+        <span class="dsa-continue-meta">
+          You've solved every available DSA problem.
+        </span>
+      </div>
+    `;
+
+    return;
+  }
+
+  const topicTitle = continueTopic
+    .split("-")
+    .map(
+      (word) => word.charAt(0).toUpperCase() + word.slice(1),
+    )
+    .join(" ");
+
+  dsaContinueCard.innerHTML = `
+    <div class="dsa-continue-info">
+      <span class="dsa-continue-topic">${topicTitle}</span>
+
+      <h4 class="dsa-continue-title">
+        ${continueProblem.title}
+      </h4>
+
+      <span class="dsa-continue-meta">
+        ${continueProblem.difficulty} · ${
+          continueProblem.status === "in-progress"
+            ? "In Progress"
+            : "Not Started"
+        }
+      </span>
+    </div>
+
+    <a
+      href="${continueProblem.url}"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="dsa-continue-action"
+    >
+      Continue →
+    </a>
+  `;
+}
+
 loadDSAProblems("arrays");
 loadDSAProblems("binary-search");
 loadDSAProblems("strings");
@@ -1514,6 +1605,7 @@ updateDSATopicProgress("arrays", arraysTopicProgressElements);
 updateDSATopicProgress("binary-search", binarySearchTopicProgressElements);
 updateDSATopicProgress("strings", stringTopicProgressElements);
 updateDSAOverallProgress(dsaOverallProgressElements);
+updateDSAContinueCard();
 
 if (binarySearchProblemsContainer) {
   loadDSAProblems("binary-search");
