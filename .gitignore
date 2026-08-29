@@ -9,3 +9,10 @@ Thumbs.db
 
 # Logs
 *.log
+
+# Claude AI
+.claude/
+
+# Node.js
+backend/node_modules/
+backend/.env

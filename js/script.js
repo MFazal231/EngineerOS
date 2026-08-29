@@ -361,6 +361,11 @@ function loadProjects() {
         project.id = Date.now() + Math.random();
         updated = true;
       }
+
+      if (!Array.isArray(project.tasks)) {
+        project.tasks = [];
+        updated = true;
+      }
     }
 
     if (updated) {
@@ -379,6 +384,7 @@ function loadProjects() {
       statusText: "Active",
       tech: ["HTML", "CSS", "JavaScript"],
       nextStep: "Build the Projects module",
+      tasks: [],
     });
 
     saveProjects();
@@ -401,6 +407,24 @@ function renderProjects() {
 
     projectCard.className = "project-card";
 
+    const tasks = project.tasks || [];
+    const { done, total, percent } = getProjectProgress(project);
+
+    const taskListMarkup = tasks.length
+      ? tasks
+          .map(
+            (task) => `
+        <li class="project-task ${task.done ? "done" : ""}">
+            <label>
+                <input type="checkbox" class="project-task-checkbox" data-project-id="${project.id}" data-task-id="${task.id}" ${task.done ? "checked" : ""} />
+                <span>${task.title}</span>
+            </label>
+            <button type="button" class="project-task-delete" data-project-id="${project.id}" data-task-id="${task.id}">&times;</button>
+        </li>`,
+          )
+          .join("")
+      : `<li class="project-task-empty">No tasks yet — add one below.</li>`;
+
     projectCard.innerHTML = `
             <div class="project-card-header">
                 <span class="project-status ${project.status}">
@@ -416,6 +440,29 @@ function renderProjects() {
                 ${project.tech
                   .map((technology) => `<span>${technology}</span>`)
                   .join("")}
+            </div>
+
+            <div class="dsa-topic-progress">
+                <div class="dsa-topic-progress-header">
+                    <strong>Progress</strong>
+                    <span>${done}/${total} tasks · ${percent}%</span>
+                </div>
+                <div class="dsa-topic-progress-bar">
+                    <div class="dsa-topic-progress-fill" style="width:${percent}%"></div>
+                </div>
+            </div>
+
+            <div class="project-tasks">
+                <div class="project-tasks-header">
+                    <strong>Tasks</strong>
+                </div>
+                <ul class="project-task-list">
+                    ${taskListMarkup}
+                </ul>
+                <form class="project-task-form" data-project-id="${project.id}">
+                    <input type="text" class="project-task-input" placeholder="Add a task..." />
+                    <button type="submit">+</button>
+                </form>
             </div>
 
             <div class="project-next">
@@ -452,6 +499,97 @@ function renderProjects() {
       deleteProject(this.dataset.id);
     });
   }
+
+  const taskCheckboxes = document.querySelectorAll(".project-task-checkbox");
+
+  for (const checkbox of taskCheckboxes) {
+    checkbox.addEventListener("change", function () {
+      toggleProjectTask(this.dataset.projectId, this.dataset.taskId);
+    });
+  }
+
+  const taskDeleteButtons = document.querySelectorAll(".project-task-delete");
+
+  for (const button of taskDeleteButtons) {
+    button.addEventListener("click", function () {
+      deleteProjectTask(this.dataset.projectId, this.dataset.taskId);
+    });
+  }
+
+  const taskForms = document.querySelectorAll(".project-task-form");
+
+  for (const form of taskForms) {
+    form.addEventListener("submit", function (event) {
+      event.preventDefault();
+
+      const input = form.querySelector(".project-task-input");
+      const title = input.value.trim();
+
+      if (!title) {
+        return;
+      }
+
+      addProjectTask(form.dataset.projectId, title);
+    });
+  }
+}
+
+function getProjectProgress(project) {
+  const tasks = project.tasks || [];
+  const total = tasks.length;
+  const done = tasks.filter((task) => task.done).length;
+  const percent = total === 0 ? 0 : Math.round((done / total) * 100);
+
+  return { done, total, percent };
+}
+
+function toggleProjectTask(projectId, taskId) {
+  const project = projects.find((project) => project.id == projectId);
+
+  if (!project) {
+    return;
+  }
+
+  const task = project.tasks.find((task) => task.id == taskId);
+
+  if (!task) {
+    return;
+  }
+
+  task.done = !task.done;
+
+  saveProjects();
+  renderProjects();
+}
+
+function deleteProjectTask(projectId, taskId) {
+  const project = projects.find((project) => project.id == projectId);
+
+  if (!project) {
+    return;
+  }
+
+  project.tasks = project.tasks.filter((task) => task.id != taskId);
+
+  saveProjects();
+  renderProjects();
+}
+
+function addProjectTask(projectId, title) {
+  const project = projects.find((project) => project.id == projectId);
+
+  if (!project) {
+    return;
+  }
+
+  project.tasks.push({
+    id: Date.now() + Math.random(),
+    title,
+    done: false,
+  });
+
+  saveProjects();
+  renderProjects();
 }
 
 function editProject(projectId) {
@@ -567,6 +705,7 @@ if (projectForm) {
       statusText: statusData[status].text,
       tech: tech,
       nextStep: nextStep,
+      tasks: [],
     };
 
     if (editingProjectId !== null) {
@@ -584,6 +723,7 @@ if (projectForm) {
           statusText: statusData[status].text,
           tech: tech,
           nextStep: nextStep,
+          tasks: projects[projectIndex].tasks || [],
         };
       }
 
