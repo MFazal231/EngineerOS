@@ -1713,6 +1713,27 @@ function updateDSAContinueCard() {
   `;
 }
 
+async function testDSATopicsAPI() {
+  try {
+    const response = await fetch(
+      "http://localhost:3000/api/dsa/topics",
+    );
+
+    if (!response.ok) {
+      throw new Error(`HTTP error: ${response.status}`);
+    }
+
+    const topics = await response.json();
+
+    console.log("DSA topics from API:", topics);
+  } catch (error) {
+    console.error(
+      "Failed to fetch DSA topics:",
+      error,
+    );
+  }
+}
+
 loadDSAProblems("arrays");
 loadDSAProblems("binary-search");
 loadDSAProblems("strings");
@@ -1799,3 +1820,5 @@ if (stringProblemsContainer) {
 
   updateDSAProgress("strings", stringProgressElements);
 }
+
+testDSATopicsAPI();
