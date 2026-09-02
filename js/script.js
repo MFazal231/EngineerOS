@@ -1068,6 +1068,7 @@ const dsaTopics = {
   },
 };
 const dsaContinueCard = document.querySelector("#dsaContinueCard");
+const dsaTopicsGrid = document.querySelector("#dsaTopicsGrid");
 const arrayProblemsContainer = document.querySelector(".array-problems");
 const binarySearchProblemsContainer = document.querySelector(
   ".binary-search-problems",
@@ -1713,7 +1714,95 @@ function updateDSAContinueCard() {
   `;
 }
 
-async function testDSATopicsAPI() {
+function getDSATopicPresentation(slug) {
+  const presentation = {
+    arrays: {
+      page: "arrays.html",
+      description: "Learn the fundamentals of storing and processing data.",
+      progressPrefix: "arrays",
+    },
+    "binary-search": {
+      page: "binary-search.html",
+      description: "Master search-space reduction and binary search patterns.",
+      progressPrefix: "binarySearch",
+    },
+    strings: {
+      page: "strings.html",
+      description: "Practice manipulation, searching, and pattern problems.",
+      progressPrefix: "string",
+    },
+  };
+
+  return presentation[slug];
+}
+
+function updateRenderedDSATopicProgress(slug, progressPrefix) {
+  const topicData = dsaTopics[slug];
+
+  if (!topicData) {
+    return;
+  }
+
+  const total = topicData.problems.length;
+  const solved = topicData.problems.filter(
+    (problem) => problem.status === "solved",
+  ).length;
+  const percentage = total === 0 ? 0 : Math.round((solved / total) * 100);
+
+  const percent = document.querySelector(`#${progressPrefix}TopicProgressPercent`);
+  const fill = document.querySelector(`#${progressPrefix}TopicProgressFill`);
+  const text = document.querySelector(`#${progressPrefix}TopicProgressText`);
+
+  if (percent) percent.textContent = `${percentage}%`;
+  if (fill) fill.style.width = `${percentage}%`;
+  if (text) text.textContent = `${solved} / ${total} solved`;
+}
+
+function renderDSATopics(topics) {
+  if (!dsaTopicsGrid) {
+    return;
+  }
+
+  dsaTopicsGrid.innerHTML = "";
+
+  for (const topic of topics) {
+    const presentation = getDSATopicPresentation(topic.slug);
+
+    if (!presentation || !dsaTopics[topic.slug]) {
+      continue;
+    }
+
+    const { page, description, progressPrefix } = presentation;
+
+    dsaTopicsGrid.insertAdjacentHTML(
+      "beforeend",
+      `
+        <a href="${page}" class="dsa-topic-card">
+          <div class="dsa-topic-card-header">
+            <h4>${topic.name}</h4>
+            <span class="topic-status active">Active</span>
+          </div>
+          <p>${description}</p>
+          <div class="dsa-topic-progress">
+            <div class="dsa-topic-progress-header">
+              <span>Progress</span>
+              <strong id="${progressPrefix}TopicProgressPercent">0%</strong>
+            </div>
+            <div class="dsa-topic-progress-bar">
+              <div class="dsa-topic-progress-fill" id="${progressPrefix}TopicProgressFill"></div>
+            </div>
+            <span id="${progressPrefix}TopicProgressText">0 / 0 solved</span>
+          </div>
+          <span class="topic-action">Open Topic →</span>
+        </a>
+      `,
+    );
+
+    updateRenderedDSATopicProgress(topic.slug, progressPrefix);
+  }
+}
+
+async function loadDSATopics() {
   try {
     const response = await fetch(
       "http://localhost:3000/api/dsa/topics",
@@ -1725,10 +1814,10 @@ async function testDSATopicsAPI() {
 
     const topics = await response.json();
 
-    console.log("DSA topics from API:", topics);
+    renderDSATopics(topics);
   } catch (error) {
     console.error(
-      "Failed to fetch DSA topics:",
+      "Failed to load DSA topics:",
       error,
     );
   }
@@ -1821,4 +1910,4 @@ if (stringProblemsContainer) {
   updateDSAProgress("strings", stringProgressElements);
 }
 
-testDSATopicsAPI();
+loadDSATopics();
