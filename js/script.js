@@ -1717,18 +1717,12 @@ function updateDSAContinueCard() {
 function getDSATopicPresentation(slug) {
   const presentation = {
     arrays: {
-      page: "arrays.html",
-      description: "Learn the fundamentals of storing and processing data.",
       progressPrefix: "arrays",
     },
     "binary-search": {
-      page: "binary-search.html",
-      description: "Master search-space reduction and binary search patterns.",
       progressPrefix: "binarySearch",
     },
     strings: {
-      page: "strings.html",
-      description: "Practice manipulation, searching, and pattern problems.",
       progressPrefix: "string",
     },
   };
@@ -1763,8 +1757,6 @@ function renderDSATopics(topics) {
     return;
   }
 
-  dsaTopicsGrid.innerHTML = "";
-
   for (const topic of topics) {
     const presentation = getDSATopicPresentation(topic.slug);
 
@@ -1772,31 +1764,20 @@ function renderDSATopics(topics) {
       continue;
     }
 
-    const { page, description, progressPrefix } = presentation;
-
-    dsaTopicsGrid.insertAdjacentHTML(
-      "beforeend",
-      `
-        <a href="${page}" class="dsa-topic-card">
-          <div class="dsa-topic-card-header">
-            <h4>${topic.name}</h4>
-            <span class="topic-status active">Active</span>
-          </div>
-          <p>${description}</p>
-          <div class="dsa-topic-progress">
-            <div class="dsa-topic-progress-header">
-              <span>Progress</span>
-              <strong id="${progressPrefix}TopicProgressPercent">0%</strong>
-            </div>
-            <div class="dsa-topic-progress-bar">
-              <div class="dsa-topic-progress-fill" id="${progressPrefix}TopicProgressFill"></div>
-            </div>
-            <span id="${progressPrefix}TopicProgressText">0 / 0 solved</span>
-          </div>
-          <span class="topic-action">Open Topic →</span>
-        </a>
-      `,
+    const { progressPrefix } = presentation;
+    const topicCard = dsaTopicsGrid.querySelector(
+      `[data-topic-slug="${topic.slug}"]`,
     );
+
+    if (!topicCard) {
+      continue;
+    }
+
+    const topicTitle = topicCard.querySelector("h4");
+
+    if (topicTitle) {
+      topicTitle.textContent = topic.name;
+    }
 
     updateRenderedDSATopicProgress(topic.slug, progressPrefix);
   }
@@ -1910,4 +1891,6 @@ if (stringProblemsContainer) {
   updateDSAProgress("strings", stringProgressElements);
 }
 
-loadDSATopics();
+if (dsaTopicsGrid) {
+  loadDSATopics();
+}
