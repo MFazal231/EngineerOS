@@ -1,5 +1,6 @@
 const express = require("express");
 const pool = require("../db/db");
+const authenticate = require("../middleware/authenticate");
 
 const router = express.Router();
 const validProblemStatuses = new Set([
@@ -25,14 +26,14 @@ router.get("/topics", async (req, res) => {
   }
 });
 
-router.get("/:topicSlug/progress", async (req, res) => {
+router.get("/:topicSlug/progress", authenticate, async (req, res) => {
   try {
     const result = await pool.query(
       `SELECT problem_id AS "problemId", status
        FROM dsa_problem_progress
-       WHERE topic_slug = $1
+       WHERE topic_slug = $1 AND user_id = $2
        ORDER BY problem_id`,
-      [req.params.topicSlug],
+      [req.params.topicSlug, req.user.id],
     );
 
     res.json(result.rows);
@@ -46,7 +47,7 @@ router.get("/:topicSlug/progress", async (req, res) => {
   }
 });
 
-router.put("/:topicSlug/problems/:problemId/status", async (req, res) => {
+router.put("/:topicSlug/problems/:problemId/status", authenticate, async (req, res) => {
   const problemId = Number(req.params.problemId);
   const { status } = req.body;
 
@@ -66,12 +67,12 @@ router.put("/:topicSlug/problems/:problemId/status", async (req, res) => {
 
   try {
     const result = await pool.query(
-      `INSERT INTO dsa_problem_progress (topic_slug, problem_id, status)
-       VALUES ($1, $2, $3)
-       ON CONFLICT (topic_slug, problem_id)
+      `INSERT INTO dsa_problem_progress (user_id, topic_slug, problem_id, status)
+       VALUES ($1, $2, $3, $4)
+       ON CONFLICT (user_id, topic_slug, problem_id)
        DO UPDATE SET status = EXCLUDED.status, updated_at = CURRENT_TIMESTAMP
        RETURNING topic_slug AS "topicSlug", problem_id AS "problemId", status, updated_at AS "updatedAt"`,
-      [req.params.topicSlug, problemId, status],
+      [req.user.id, req.params.topicSlug, problemId, status],
     );
 
     res.json(result.rows[0]);

@@ -757,6 +757,10 @@ const DSA_STORAGE_KEY = "dsaProblems";
 const BINARY_SEARCH_STORAGE_KEY = "engineerOSBinarySearchProblems";
 const STRING_STORAGE_KEY = "engineerOSStrings";
 const DSA_API_BASE_URL = "http://localhost:3000/api/dsa";
+
+function getDSAAuthToken() {
+  return window.engineerOSAuth?.getAuthToken() || null;
+}
 const arrayProblems = [
   {
     id: 1,
@@ -1807,13 +1811,16 @@ async function loadDSATopics() {
 
 async function loadDSAProgressFromAPI(topic) {
   const topicData = dsaTopics[topic];
+  const authToken = getDSAAuthToken();
 
-  if (!topicData) {
+  if (!topicData || !authToken) {
     return false;
   }
 
   try {
-    const response = await fetch(`${DSA_API_BASE_URL}/${topic}/progress`);
+    const response = await fetch(`${DSA_API_BASE_URL}/${topic}/progress`, {
+      headers: { Authorization: `Bearer ${authToken}` },
+    });
 
     if (!response.ok) {
       throw new Error(`HTTP error: ${response.status}`);
@@ -1841,6 +1848,12 @@ async function loadDSAProgressFromAPI(topic) {
 }
 
 async function saveDSAProblemProgress(topic, problemId, status) {
+  const authToken = getDSAAuthToken();
+
+  if (!authToken) {
+    return;
+  }
+
   try {
     const response = await fetch(
       `${DSA_API_BASE_URL}/${topic}/problems/${problemId}/status`,
@@ -1848,6 +1861,7 @@ async function saveDSAProblemProgress(topic, problemId, status) {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`,
         },
         body: JSON.stringify({ status }),
       },

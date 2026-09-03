@@ -1,10 +1,15 @@
 const express = require("express");
 const cors = require("cors");
 const pool = require("./db/db");
+const authRoutes = require("./routes/authRoutes");
 const dsaRoutes = require("./routes/dsaRoutes");
 
 const app = express();
 const PORT = Number(process.env.PORT) || 3000;
+
+if (!process.env.JWT_SECRET) {
+  throw new Error("JWT_SECRET must be set in the environment");
+}
 
 app.use(express.json());
 app.use(
@@ -33,6 +38,7 @@ app.get("/api/health", async (req, res) => {
 });
 
 app.use("/api/dsa", dsaRoutes);
+app.use("/api/auth", authRoutes);
 
 app.listen(PORT, () => {
   console.log(
