@@ -756,6 +756,7 @@ if (projectForm) {
 const DSA_STORAGE_KEY = "dsaProblems";
 const BINARY_SEARCH_STORAGE_KEY = "engineerOSBinarySearchProblems";
 const STRING_STORAGE_KEY = "engineerOSStrings";
+const DSA_API_BASE_URL = "http://localhost:3000/api/dsa";
 const arrayProblems = [
   {
     id: 1,
@@ -1536,6 +1537,8 @@ function setupDSAStatus(
         JSON.stringify(topicData.problems),
       );
 
+      saveDSAProblemProgress(topic, problemId, problem.status);
+
       updateDSAProgress(topic, progressElements);
 
       updateDSATopicProgress(topic, topicProgressElements);
@@ -1785,9 +1788,7 @@ function renderDSATopics(topics) {
 
 async function loadDSATopics() {
   try {
-    const response = await fetch(
-      "http://localhost:3000/api/dsa/topics",
-    );
+    const response = await fetch(`${DSA_API_BASE_URL}/topics`);
 
     if (!response.ok) {
       throw new Error(`HTTP error: ${response.status}`);
@@ -1802,6 +1803,105 @@ async function loadDSATopics() {
       error,
     );
   }
+}
+
+async function loadDSAProgressFromAPI(topic) {
+  const topicData = dsaTopics[topic];
+
+  if (!topicData) {
+    return false;
+  }
+
+  try {
+    const response = await fetch(`${DSA_API_BASE_URL}/${topic}/progress`);
+
+    if (!response.ok) {
+      throw new Error(`HTTP error: ${response.status}`);
+    }
+
+    const savedProgress = await response.json();
+
+    for (const savedProblem of savedProgress) {
+      const problem = topicData.problems.find(
+        (problem) => problem.id === savedProblem.problemId,
+      );
+
+      if (problem) {
+        problem.status = savedProblem.status;
+      }
+    }
+
+    localStorage.setItem(topicData.storageKey, JSON.stringify(topicData.problems));
+
+    return true;
+  } catch (error) {
+    console.error(`Failed to load ${topic} progress from the API:`, error);
+    return false;
+  }
+}
+
+async function saveDSAProblemProgress(topic, problemId, status) {
+  try {
+    const response = await fetch(
+      `${DSA_API_BASE_URL}/${topic}/problems/${problemId}/status`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ status }),
+      },
+    );
+
+    if (!response.ok) {
+      throw new Error(`HTTP error: ${response.status}`);
+    }
+  } catch (error) {
+    console.error(`Failed to save ${topic} progress to the API:`, error);
+  }
+}
+
+function refreshDSAProblemList(
+  topic,
+  container,
+  progressElements,
+  topicProgressElements,
+) {
+  renderDSAProblemsWithFilters(topic, container);
+  setupDSAButtons(container);
+  setupDSAStatus(topic, container, progressElements, topicProgressElements);
+  updateDSAProgress(topic, progressElements);
+  updateDSATopicProgress(topic, topicProgressElements);
+  updateDSAOverallProgress(dsaOverallProgressElements);
+  updateDSAContinueCard();
+}
+
+async function syncDSAProblemList(
+  topic,
+  container,
+  progressElements,
+  topicProgressElements,
+) {
+  const didLoadProgress = await loadDSAProgressFromAPI(topic);
+
+  if (didLoadProgress) {
+    refreshDSAProblemList(
+      topic,
+      container,
+      progressElements,
+      topicProgressElements,
+    );
+  }
+}
+
+async function syncDSAOverviewProgress() {
+  await Promise.all(Object.keys(dsaTopics).map(loadDSAProgressFromAPI));
+
+  updateDSATopicProgress("arrays", arraysTopicProgressElements);
+  updateDSATopicProgress("binary-search", binarySearchTopicProgressElements);
+  updateDSATopicProgress("strings", stringTopicProgressElements);
+  updateDSAOverallProgress(dsaOverallProgressElements);
+  updateDSAContinueCard();
 }
 
 loadDSAProblems("arrays");
@@ -1828,6 +1928,12 @@ if (arrayProblemsContainer) {
     resetFiltersButton,
   );
   updateDSAProgress("arrays", arrayProgressElements);
+  syncDSAProblemList(
+    "arrays",
+    arrayProblemsContainer,
+    arrayProgressElements,
+    arraysTopicProgressElements,
+  );
 }
 updateDSATopicProgress("arrays", arraysTopicProgressElements);
 updateDSATopicProgress("binary-search", binarySearchTopicProgressElements);
@@ -1864,6 +1970,12 @@ if (binarySearchProblemsContainer) {
     binarySearchResetFiltersButton,
   );
   updateDSAProgress("binary-search", binarySearchProgressElements);
+  syncDSAProblemList(
+    "binary-search",
+    binarySearchProblemsContainer,
+    binarySearchProgressElements,
+    binarySearchTopicProgressElements,
+  );
 }
 
 if (stringProblemsContainer) {
@@ -1889,8 +2001,15 @@ if (stringProblemsContainer) {
   );
 
   updateDSAProgress("strings", stringProgressElements);
+  syncDSAProblemList(
+    "strings",
+    stringProblemsContainer,
+    stringProgressElements,
+    stringTopicProgressElements,
+  );
 }
 
 if (dsaTopicsGrid) {
   loadDSATopics();
+  syncDSAOverviewProgress();
 }
