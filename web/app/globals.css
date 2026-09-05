@@ -1989,8 +1989,67 @@ input:focus-visible {
   color: var(--text);
 }
 
-.dsa-continue {
+.dsa-continue,
+.next-action {
   margin-bottom: 32px;
+}
+
+.next-action-label {
+  margin-bottom: var(--spacing-sm);
+  color: var(--text-light);
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.next-action-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 20px 24px;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+}
+
+.next-action-info {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.next-action-headline {
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+.next-action-reason {
+  color: var(--text-light);
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+.next-action-cta {
+  flex-shrink: 0;
+  padding: 8px 14px;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: var(--primary);
+  color: white;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition:
+    background-color var(--ease),
+    transform var(--ease);
+}
+
+.next-action-cta:hover {
+  background: #1d4ed8;
+  transform: translateY(-1px);
 }
 
 .dsa-continue-card {

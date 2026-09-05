@@ -1,5 +1,6 @@
 import { getSessionUser } from "@/lib/auth";
 import { Greeting } from "@/app/components/Greeting";
+import { NextActionWidget } from "@/app/components/NextActionWidget";
 import { TodayMission } from "@/app/components/TodayMission";
 
 export default async function DashboardPage() {
@@ -53,6 +54,8 @@ export default async function DashboardPage() {
           </div>
         </div>
       </section>
+
+      {user && <NextActionWidget userId={user.id} />}
 
       <TodayMission />
     </main>
