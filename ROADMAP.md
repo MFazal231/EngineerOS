@@ -8,17 +8,23 @@ Ongoing, in parallel with every phase below: **validate willingness to pay.** Ta
 
 ---
 
-## Phase 0 — Stack migration foundation
+## Phase 0 — Stack migration foundation ✅ (local dev — deploy still open)
 Get to a working Next.js app with feature parity for what already exists, nothing new yet.
 
-- Scaffold Next.js (App Router) + TypeScript project
-- Prisma schema mirroring current Postgres tables (`users`, `dsa_topics`, `dsa_problem_progress`) — reuse the schema, don't redesign it
-- Port auth: register/login/JWT logic → NextAuth (credentials provider) or a ported version of the existing bcrypt+JWT flow, but move sessions to httpOnly cookies instead of localStorage
-- Port DSA pages (topics, problems, filters, progress, continue-practicing) into React components, calling Next.js API routes instead of the old Express routes
-- Port Projects module (cards, tasks, progress) into React — and move it onto Postgres via API routes instead of localStorage (this was the biggest gap found in the current build: Projects data doesn't survive a browser change today)
-- Deploy pipeline: Vercel (app) + a hosted Postgres (Neon/Railway) for staging
+- [x] Scaffold Next.js (App Router) + TypeScript project — `web/`, Next.js 16.3.4
+- [x] Prisma schema mirroring current Postgres tables (`users`, `dsa_topics`, `dsa_problem_progress`), baselined against the live DB without touching existing rows, plus new `projects`/`project_tasks` tables
+- [x] Port auth — custom bcrypt + JWT in an httpOnly cookie (`lib/auth.ts`), not NextAuth (dropped it: this stack is on React 19.2/Next 16, newer than NextAuth v4's tested range, and the ask was just a cookie session, not OAuth)
+- [x] Port DSA pages (topics, problems, filters, search, sort, progress, continue-practicing) into React, calling Next.js API routes
+- [x] Port Projects module (cards, tasks, progress) into React, backed by Postgres via API routes instead of localStorage
+- [x] Dashboard (greeting, stat cards, Today's Mission widget) ported
+- [ ] Deploy pipeline: Vercel (app) + a hosted Postgres (Neon/Railway) for staging — not started
 
-**Done when:** everything that works today in the vanilla-JS version also works in Next.js, backed by a real database, deployed at a real URL.
+**Done when:** everything that works today in the vanilla-JS version also works in Next.js, backed by a real database, deployed at a real URL. *(Verified locally: register/login/logout with httpOnly session, DSA filter/sort/status-change persisting across reload, Projects create/edit/tasks persisting across reload including the edit-preserves-tasks case. Not yet deployed anywhere.)*
+
+Notable things learned building this, worth knowing before touching `web/` again:
+- Prisma 7's `PrismaClient` requires an explicit driver adapter now (`@prisma/adapter-pg` + `pg`) — `new PrismaClient()` with no args throws at runtime, it no longer reads `DATABASE_URL` on its own. See `lib/prisma.ts`.
+- `prisma` CLI's npm "latest" tag currently resolves to an 8.0.0 release candidate while `@prisma/client`'s "latest" is still 7.10.0 — both are pinned to the matched stable `7.10.0` in `package.json`, don't bump either without checking the other.
+- The vanilla app (`index.html`, `pages/`, `js/`, `css/`, `backend/`) is untouched and still runs independently during this migration — nothing has been deleted yet.
 
 ## Phase 1 — Dashboard becomes real
 - Replace the static dashboard numbers ("15 problems", "18h") with real aggregate queries across DSA progress + Projects

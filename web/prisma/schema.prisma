@@ -1,0 +1,79 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id           Int      @id @default(autoincrement())
+  name         String   @db.VarChar(100)
+  email        String   @unique @db.VarChar(255)
+  passwordHash String   @map("password_hash") @db.VarChar(255)
+  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  dsaProgress DsaProblemProgress[]
+  projects    Project[]
+
+  @@map("users")
+}
+
+model DsaTopic {
+  id   Int    @id @default(autoincrement())
+  name String @db.VarChar(100)
+  slug String @unique @db.VarChar(100)
+
+  progress DsaProblemProgress[]
+
+  @@map("dsa_topics")
+}
+
+model DsaProblemProgress {
+  userId    Int      @map("user_id")
+  topicSlug String   @map("topic_slug") @db.VarChar(100)
+  problemId Int      @map("problem_id")
+  status    String   @db.VarChar(20)
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  user  User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  topic DsaTopic @relation(fields: [topicSlug], references: [slug], onDelete: Cascade)
+
+  @@id([userId, topicSlug, problemId])
+  @@map("dsa_problem_progress")
+}
+
+enum ProjectStatus {
+  planning
+  active
+  completed
+}
+
+model Project {
+  id          Int           @id @default(autoincrement())
+  userId      Int           @map("user_id")
+  name        String
+  description String
+  status      ProjectStatus @default(active)
+  tech        String[]      @default([])
+  nextStep    String        @default("") @map("next_step")
+  createdAt   DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  user  User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tasks ProjectTask[]
+
+  @@map("projects")
+}
+
+model ProjectTask {
+  id        Int      @id @default(autoincrement())
+  projectId Int      @map("project_id")
+  title     String
+  done      Boolean  @default(false)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@map("project_tasks")
+}
