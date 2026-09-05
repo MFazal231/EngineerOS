@@ -1,5 +1,9 @@
 export type ChatMessage = { role: "user" | "assistant"; content: string };
 
+export function isAIChatConfigured(): boolean {
+  return Boolean(process.env.OPENAI_API_KEY || process.env.ANTHROPIC_API_KEY || process.env.GEMINI_API_KEY);
+}
+
 const SYSTEM_PROMPT = (context: string) => `You are the AI Engineer inside EngineerOS, a tool that helps developers learn, practice DSA, and build projects.
 
 You have access to this user's REAL activity data below. Never invent progress, problems, or projects that aren't listed here — if you don't know something from this data, say so honestly instead of guessing.

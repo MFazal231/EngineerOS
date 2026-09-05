@@ -1,6 +1,6 @@
 import { getSessionUser } from "@/lib/auth";
 import { buildUserContext } from "@/lib/ai/context";
-import { chatWithAI, type ChatMessage } from "@/lib/ai/chat";
+import { chatWithAI, isAIChatConfigured, type ChatMessage } from "@/lib/ai/chat";
 
 export async function POST(request: Request) {
   const user = await getSessionUser();
@@ -19,12 +19,22 @@ export async function POST(request: Request) {
     );
   }
 
+  if (!isAIChatConfigured()) {
+    return Response.json(
+      { status: "error", message: "AI Engineer isn't configured yet — no API key set." },
+      { status: 503 },
+    );
+  }
+
   const context = await buildUserContext(user.id);
   const reply = await chatWithAI(context, messages);
 
   if (!reply) {
     return Response.json(
-      { status: "error", message: "AI Engineer isn't configured yet — no API key set." },
+      {
+        status: "error",
+        message: "AI Engineer is temporarily unavailable (likely rate-limited) — try again in a minute.",
+      },
       { status: 503 },
     );
   }
