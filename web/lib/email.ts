@@ -16,7 +16,7 @@ export async function sendVerificationEmail(to: string, name: string, token: str
   }
 
   const baseUrl = process.env.APP_URL || "http://localhost:3000";
-  const verifyUrl = `${baseUrl}/verify?token=${token}`;
+  const verifyUrl = `${baseUrl}/api/auth/verify?token=${token}`;
 
   const response = await fetch("https://api.resend.com/emails", {
     method: "POST",
