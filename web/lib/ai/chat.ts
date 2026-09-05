@@ -35,7 +35,7 @@ export async function chatWithAI(context: string, messages: ChatMessage[]): Prom
     if (anthropicKey) return await callAnthropic(system, messages, anthropicKey);
     return await callGemini(system, messages, geminiKey as string);
   } catch (error) {
-    console.error("chatWithAI failed:", error);
+    console.warn("chatWithAI failed:", error);
     return null;
   }
 }
@@ -53,7 +53,7 @@ async function callOpenAI(system: string, messages: ChatMessage[], apiKey: strin
   });
 
   if (!response.ok) {
-    console.error("OpenAI chat error:", response.status, await response.text());
+    console.warn("OpenAI chat error:", response.status, await response.text());
     return null;
   }
 
@@ -78,7 +78,7 @@ async function callAnthropic(system: string, messages: ChatMessage[], apiKey: st
   });
 
   if (!response.ok) {
-    console.error("Anthropic chat error:", response.status, await response.text());
+    console.warn("Anthropic chat error:", response.status, await response.text());
     return null;
   }
 
@@ -104,7 +104,7 @@ async function callGemini(system: string, messages: ChatMessage[], apiKey: strin
   );
 
   if (!response.ok) {
-    console.error("Gemini chat error:", response.status, await response.text());
+    console.warn("Gemini chat error:", response.status, await response.text());
     return null;
   }
 

@@ -36,7 +36,7 @@ Reply with just the rewritten sentence in plain text — no markdown, no asteris
     return { ...action, reason: rewritten.trim(), source: "ai" };
   } catch (error) {
     // Any failure (bad key, rate limit, network) falls back to the heuristic silently.
-    console.error("refineWithLLM failed, falling back to heuristic:", error);
+    console.warn("refineWithLLM failed, falling back to heuristic:", error);
     return action;
   }
 }
@@ -103,7 +103,10 @@ async function callGemini(prompt: string, apiKey: string): Promise<string | null
   );
 
   if (!response.ok) {
-    console.error("Gemini API error:", response.status, await response.text());
+    // Expected and handled (falls back to the plain heuristic reason) — a 429 quota
+    // error here is routine on the free tier, not a bug, so warn rather than error
+    // to avoid tripping Next.js's dev-mode error overlay for normal degradation.
+    console.warn("Gemini API error, falling back to heuristic:", response.status, await response.text());
     return null;
   }
 
