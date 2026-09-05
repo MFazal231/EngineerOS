@@ -1,6 +1,7 @@
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 import { createSession } from "@/lib/auth";
+import { isEmailVerificationEnabled } from "@/lib/email";
 
 export async function POST(request: Request) {
   const body = await request.json();
@@ -20,6 +21,13 @@ export async function POST(request: Request) {
     return Response.json(
       { status: "error", message: "Email or password is incorrect" },
       { status: 401 },
+    );
+  }
+
+  if (isEmailVerificationEnabled() && !user.emailVerified) {
+    return Response.json(
+      { status: "error", message: "Check your email to verify your account before signing in." },
+      { status: 403 },
     );
   }
 

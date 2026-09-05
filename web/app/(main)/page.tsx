@@ -3,13 +3,34 @@ import { Greeting } from "@/app/components/Greeting";
 import { NextActionWidget } from "@/app/components/NextActionWidget";
 import { TodayMission } from "@/app/components/TodayMission";
 
-export default async function DashboardPage() {
+export default async function DashboardPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ verified?: string }>;
+}) {
   const user = await getSessionUser();
+  const { verified } = await searchParams;
 
   return (
     <main className="main">
       <section className="hero">
         <div className="container hero-container">
+          {verified && (
+            <p
+              style={{
+                marginBottom: "16px",
+                padding: "12px 16px",
+                background: "#ecfdf5",
+                color: "#059669",
+                borderRadius: "var(--radius-sm)",
+                fontWeight: 600,
+                fontSize: "0.9rem",
+              }}
+            >
+              ✅ Email verified — welcome to EngineerOS!
+            </p>
+          )}
+
           <div className="hero-content">
             <Greeting name={user?.name ?? "there"} />
             <p>Keep building. Every commit counts.</p>

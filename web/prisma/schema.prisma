@@ -13,6 +13,9 @@ model User {
   email        String   @unique @db.VarChar(255)
   passwordHash String   @map("password_hash") @db.VarChar(255)
   isAdmin      Boolean  @default(false) @map("is_admin")
+  emailVerified Boolean @default(false) @map("email_verified")
+  verificationToken          String?   @unique @map("verification_token") @db.VarChar(64)
+  verificationTokenExpiresAt DateTime? @map("verification_token_expires_at") @db.Timestamptz(6)
   createdAt    DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
 
   dsaProgress DsaProblemProgress[]

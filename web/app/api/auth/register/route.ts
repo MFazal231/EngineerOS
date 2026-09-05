@@ -1,6 +1,8 @@
 import bcrypt from "bcryptjs";
+import crypto from "node:crypto";
 import { prisma } from "@/lib/prisma";
 import { createSession } from "@/lib/auth";
+import { isEmailVerificationEnabled, sendVerificationEmail } from "@/lib/email";
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -41,10 +43,30 @@ export async function POST(request: Request) {
   }
 
   const passwordHash = await bcrypt.hash(password, 12);
+  const verificationRequired = isEmailVerificationEnabled();
+  const verificationToken = verificationRequired ? crypto.randomBytes(32).toString("hex") : null;
+
   const user = await prisma.user.create({
-    data: { name, email, passwordHash },
+    data: {
+      name,
+      email,
+      passwordHash,
+      emailVerified: !verificationRequired,
+      verificationToken,
+      verificationTokenExpiresAt: verificationRequired
+        ? new Date(Date.now() + 24 * 60 * 60 * 1000)
+        : null,
+    },
     select: { id: true, name: true, email: true },
   });
+
+  if (verificationRequired && verificationToken) {
+    await sendVerificationEmail(user.email, user.name, verificationToken);
+    return Response.json(
+      { status: "ok", requiresVerification: true, message: "Check your email to verify your account." },
+      { status: 201 },
+    );
+  }
 
   await createSession(user);
 
