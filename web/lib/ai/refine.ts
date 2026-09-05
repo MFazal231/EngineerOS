@@ -9,8 +9,9 @@ import type { NextAction } from "./nextAction";
 export async function refineWithLLM(action: NextAction): Promise<NextAction> {
   const openaiKey = process.env.OPENAI_API_KEY;
   const anthropicKey = process.env.ANTHROPIC_API_KEY;
+  const geminiKey = process.env.GEMINI_API_KEY;
 
-  if (!openaiKey && !anthropicKey) {
+  if (!openaiKey && !anthropicKey && !geminiKey) {
     return action;
   }
 
@@ -24,15 +25,18 @@ Reply with just the rewritten sentence, nothing else.`;
   try {
     const rewritten = openaiKey
       ? await callOpenAI(prompt, openaiKey)
-      : await callAnthropic(prompt, anthropicKey as string);
+      : anthropicKey
+        ? await callAnthropic(prompt, anthropicKey)
+        : await callGemini(prompt, geminiKey as string);
 
     if (!rewritten) {
       return action;
     }
 
     return { ...action, reason: rewritten.trim(), source: "ai" };
-  } catch {
+  } catch (error) {
     // Any failure (bad key, rate limit, network) falls back to the heuristic silently.
+    console.error("refineWithLLM failed, falling back to heuristic:", error);
     return action;
   }
 }
@@ -81,4 +85,28 @@ async function callAnthropic(prompt: string, apiKey: string): Promise<string | n
 
   const data = await response.json();
   return data.content?.[0]?.text ?? null;
+}
+
+async function callGemini(prompt: string, apiKey: string): Promise<string | null> {
+  const response = await fetch(
+    `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${apiKey}`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        contents: [{ parts: [{ text: prompt }] }],
+        // gemini-3.6-flash spends part of maxOutputTokens on internal "thinking" before
+        // the visible answer — 100 wasn't enough headroom and truncated the reply mid-sentence.
+        generationConfig: { maxOutputTokens: 1000, temperature: 0.6 },
+      }),
+    },
+  );
+
+  if (!response.ok) {
+    console.error("Gemini API error:", response.status, await response.text());
+    return null;
+  }
+
+  const data = await response.json();
+  return data.candidates?.[0]?.content?.parts?.[0]?.text ?? null;
 }
