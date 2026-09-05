@@ -17,6 +17,7 @@ export async function Header() {
 
       <nav className="nav" aria-label="Main Navigation">
         <NavLink href="/">Dashboard</NavLink>
+        <NavLink href="/ai">🤖 AI Chat</NavLink>
         <NavLink href="/projects">Projects</NavLink>
         <NavLink href="/dsa">DSA</NavLink>
         <a href="#">Roadmap</a>

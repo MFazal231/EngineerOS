@@ -20,7 +20,7 @@ export async function refineWithLLM(action: NextAction): Promise<NextAction> {
 Headline: ${action.headline}
 Facts: ${action.reason}
 
-Reply with just the rewritten sentence, nothing else.`;
+Reply with just the rewritten sentence in plain text — no markdown, no asterisks — nothing else.`;
 
   try {
     const rewritten = openaiKey
