@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { Bell, Menu, Search, Sparkles, User, X } from "lucide-react";
+// Bell and Search are unused while the notification/search UI is commented out below.
+import { Menu, Sparkles, User, X } from "lucide-react";
 import { NavLink } from "./NavLink";
 import { SignOutButton } from "./SignOutButton";
 
@@ -18,11 +19,14 @@ export function HeaderNav({ userName }: { userName: string | null }) {
         </NavLink>
         <NavLink href="/projects">Projects</NavLink>
         <NavLink href="/dsa">DSA</NavLink>
+        {/* Roadmap and Community have no real page yet - re-enable once built.
         <a href="#">Roadmap</a>
         <a href="#">Community</a>
+        */}
       </nav>
 
       <div className="header-actions">
+        {/* Search doesn't actually search anything yet - re-enable once wired up.
         <div className="search-box">
           <span className="search-icon">
             <Search size={15} />
@@ -30,10 +34,13 @@ export function HeaderNav({ userName }: { userName: string | null }) {
           <input type="text" placeholder="Search..." />
           <span className="shortcut">Ctrl + K</span>
         </div>
+        */}
 
+        {/* Notifications button has no behavior yet - re-enable once wired up.
         <button className="notification-btn" aria-label="Notifications">
           <Bell size={16} />
         </button>
+        */}
 
         {userName ? (
           <SignOutButton />
@@ -56,12 +63,14 @@ export function HeaderNav({ userName }: { userName: string | null }) {
 
       {open && (
         <div className="mobile-menu">
+          {/* Search doesn't actually search anything yet - re-enable once wired up.
           <div className="search-box">
             <span className="search-icon">
               <Search size={15} />
             </span>
             <input type="text" placeholder="Search..." />
           </div>
+          */}
 
           <NavLink href="/" onClick={() => setOpen(false)}>
             Dashboard
@@ -75,8 +84,10 @@ export function HeaderNav({ userName }: { userName: string | null }) {
           <NavLink href="/dsa" onClick={() => setOpen(false)}>
             DSA
           </NavLink>
+          {/* Roadmap and Community have no real page yet - re-enable once built.
           <a href="#">Roadmap</a>
           <a href="#">Community</a>
+          */}
 
           <div className="mobile-menu-footer">
             {userName ? (
