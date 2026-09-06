@@ -52,8 +52,6 @@ export async function getTodayMissions(userId: number): Promise<Mission[]> {
   }
 
   const projectWithOpenTask = projects.find((p) => p.tasks.some((t) => !t.done));
-  const emptyProject = projects.find((p) => p.tasks.length === 0);
-
   if (projectWithOpenTask) {
     const nextTask = projectWithOpenTask.tasks.find((t) => !t.done);
     if (nextTask) {
@@ -69,24 +67,6 @@ export async function getTodayMissions(userId: number): Promise<Mission[]> {
         action: { type: "task", projectId: projectWithOpenTask.id, taskId: nextTask.id },
       });
     }
-  } else if (emptyProject) {
-    missions.push({
-      key: "build",
-      label: "BUILD FOCUS",
-      title: `Break down "${emptyProject.name}" into tasks`,
-      meta: [{ cls: "build", text: "Project" }],
-      href: "/projects",
-      action: null,
-    });
-  } else if (projects.length === 0) {
-    missions.push({
-      key: "build",
-      label: "BUILD FOCUS",
-      title: "Start your first project",
-      meta: [{ cls: "build", text: "Project" }],
-      href: "/projects",
-      action: null,
-    });
   }
 
   const untouchedTopic = TOPIC_SLUGS.find((slug) => {

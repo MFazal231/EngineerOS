@@ -148,7 +148,6 @@ export function TodayMissionBoard({ missions }: { missions: Mission[] }) {
 
           const showStart = state.status === "not-started" && !state.completed;
           const showPause = state.status === "running" || (state.status === "paused" && !state.completed);
-          const trackable = mission.action !== null || mission.key === "git";
           const { color, Icon } = CATEGORY[mission.key] ?? CATEGORY.git;
 
           return (
@@ -160,15 +159,13 @@ export function TodayMissionBoard({ missions }: { missions: Mission[] }) {
                     <Icon size={17} />
                   </span>
                   <p className="mission-label-text">{mission.label}</p>
-                  {trackable && (
-                    <input
-                      type="checkbox"
-                      className="mission-checkbox"
-                      checked={state.completed}
-                      disabled={state.pending}
-                      onChange={(e) => toggleComplete(mission, e.target.checked)}
-                    />
-                  )}
+                  <input
+                    type="checkbox"
+                    className="mission-checkbox"
+                    checked={state.completed}
+                    disabled={state.pending}
+                    onChange={(e) => toggleComplete(mission, e.target.checked)}
+                  />
                 </div>
 
                 <h3>{mission.title}</h3>
@@ -181,59 +178,48 @@ export function TodayMissionBoard({ missions }: { missions: Mission[] }) {
                   ))}
                 </div>
 
-                {trackable && (
-                  <div className="mission-timer">
-                    <span>{formatTime(state.elapsedSeconds)}</span>
-                  </div>
-                )}
+                <div className="mission-timer">
+                  <span>{formatTime(state.elapsedSeconds)}</span>
+                </div>
 
                 <div className="mission-actions">
-                  {trackable ? (
-                    <>
-                      <button
-                        className="start-mission-btn"
-                        style={{ display: showStart ? "flex" : "none" }}
-                        onClick={() => update(mission.key, { status: "running" })}
-                      >
-                        <Play size={13} fill="currentColor" /> Start
-                      </button>
+                  <button
+                    className="start-mission-btn"
+                    style={{ display: showStart ? "flex" : "none" }}
+                    onClick={() => update(mission.key, { status: "running" })}
+                  >
+                    <Play size={13} fill="currentColor" /> Start
+                  </button>
 
-                      <button
-                        className="pause-mission-btn"
-                        style={{ display: showPause ? "flex" : "none" }}
-                        onClick={() => update(mission.key, { status: state.status === "running" ? "paused" : "running" })}
-                      >
-                        {state.status === "paused" ? (
-                          <>
-                            <Play size={13} fill="currentColor" /> Resume
-                          </>
-                        ) : (
-                          <>
-                            <Pause size={13} fill="currentColor" /> Pause
-                          </>
-                        )}
-                      </button>
+                  <button
+                    className="pause-mission-btn"
+                    style={{ display: showPause ? "flex" : "none" }}
+                    onClick={() => update(mission.key, { status: state.status === "running" ? "paused" : "running" })}
+                  >
+                    {state.status === "paused" ? (
+                      <>
+                        <Play size={13} fill="currentColor" /> Resume
+                      </>
+                    ) : (
+                      <>
+                        <Pause size={13} fill="currentColor" /> Pause
+                      </>
+                    )}
+                  </button>
 
-                      {mission.action !== null && (
-                        <a className="problem-solve-btn" href={mission.href}>
-                          Open
-                        </a>
-                      )}
-
-                      <button
-                        className="complete-mission-btn"
-                        style={{ display: "flex" }}
-                        disabled={state.completed || state.pending}
-                        onClick={() => toggleComplete(mission, true)}
-                      >
-                        <CheckCircle2 size={13} /> {state.completed ? "Completed" : "Complete"}
-                      </button>
-                    </>
-                  ) : (
+                  {mission.action !== null && (
                     <a className="problem-solve-btn" href={mission.href}>
                       Open
                     </a>
                   )}
+
+                  <button
+                    className="complete-mission-btn"
+                    disabled={state.completed || state.pending}
+                    onClick={() => toggleComplete(mission, true)}
+                  >
+                    <CheckCircle2 size={13} /> {state.completed ? "Completed" : "Complete"}
+                  </button>
                 </div>
               </div>
             </div>
