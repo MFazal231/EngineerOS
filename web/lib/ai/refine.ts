@@ -89,13 +89,13 @@ async function callAnthropic(prompt: string, apiKey: string): Promise<string | n
 
 async function callGemini(prompt: string, apiKey: string): Promise<string | null> {
   const response = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${apiKey}`,
+    `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent?key=${apiKey}`,
     {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         contents: [{ parts: [{ text: prompt }] }],
-        // gemini-3.6-flash spends part of maxOutputTokens on internal "thinking" before
+        // Flash models spend part of maxOutputTokens on internal "thinking" before
         // the visible answer — 100 wasn't enough headroom and truncated the reply mid-sentence.
         generationConfig: { maxOutputTokens: 1000, temperature: 0.6 },
       }),
