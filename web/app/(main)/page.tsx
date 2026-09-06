@@ -1,5 +1,6 @@
 import { CheckCircle2, Clock, Code2, BookOpen, Flame } from "lucide-react";
 import { getSessionUser } from "@/lib/auth";
+import { getDashboardStats } from "@/lib/dashboardStats";
 import { Greeting } from "@/app/components/Greeting";
 import { NextActionWidget } from "@/app/components/NextActionWidget";
 import { TodayMission } from "@/app/components/TodayMission";
@@ -11,6 +12,9 @@ export default async function DashboardPage({
 }) {
   const user = await getSessionUser();
   const { verified } = await searchParams;
+  const stats = user
+    ? await getDashboardStats(user.id)
+    : { codingStreak: 0, learningModules: 0, projectsCount: 0, weeklyActions: 0 };
 
   return (
     <main className="main">
@@ -47,7 +51,7 @@ export default async function DashboardPage({
                 <span className="emoji">
                   <Flame size={22} />
                 </span>
-                <h3>15</h3>
+                <h3>{stats.codingStreak}</h3>
                 <p>Coding Streak</p>
               </div>
             </div>
@@ -58,7 +62,7 @@ export default async function DashboardPage({
                 <span className="emoji">
                   <BookOpen size={22} />
                 </span>
-                <h3>3</h3>
+                <h3>{stats.learningModules}</h3>
                 <p>Learning Modules</p>
               </div>
             </div>
@@ -69,7 +73,7 @@ export default async function DashboardPage({
                 <span className="emoji">
                   <Code2 size={22} />
                 </span>
-                <h3>5</h3>
+                <h3>{stats.projectsCount}</h3>
                 <p>Projects</p>
               </div>
             </div>
@@ -80,8 +84,8 @@ export default async function DashboardPage({
                 <span className="emoji">
                   <Clock size={22} />
                 </span>
-                <h3>18h</h3>
-                <p>This Week</p>
+                <h3>{stats.weeklyActions}</h3>
+                <p>Actions This Week</p>
               </div>
             </div>
           </div>
