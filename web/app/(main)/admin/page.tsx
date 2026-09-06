@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { CheckCircle2, FolderKanban, TrendingUp, Users } from "lucide-react";
 import { getSessionUser } from "@/lib/auth";
 import { isAdmin, getAdminOverview } from "@/lib/admin";
+import { AdminDeleteUserButton } from "@/app/components/AdminDeleteUserButton";
 
 export default async function AdminPage() {
   const user = await getSessionUser();
@@ -83,6 +84,7 @@ export default async function AdminPage() {
                   <th>Joined</th>
                   <th>Problems Solved</th>
                   <th>Projects</th>
+                  <th></th>
                 </tr>
               </thead>
               <tbody>
@@ -93,6 +95,9 @@ export default async function AdminPage() {
                     <td>{u.createdAt.toLocaleDateString()}</td>
                     <td>{u.solvedCount}</td>
                     <td>{u.projectCount}</td>
+                    <td>
+                      {u.id !== user.id && <AdminDeleteUserButton userId={u.id} userName={u.name} />}
+                    </td>
                   </tr>
                 ))}
               </tbody>
