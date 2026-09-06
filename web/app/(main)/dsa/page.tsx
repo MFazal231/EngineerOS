@@ -5,34 +5,28 @@ import { DSA_TOPICS, TOPIC_SLUGS, type TopicSlug } from "@/lib/dsa/topics";
 import { getUserProgressMap, computeTopicStats, computeOverallStats, computeContinuePractice } from "@/lib/dsa/progress";
 
 const TOPIC_CARD_COPY: Record<TopicSlug, string> = {
-  arrays: "Learn the fundamentals of storing and processing data.",
+  arrays: "Learn the fundamentals of storing, hashing, and processing data.",
   strings: "Practice manipulation, searching, and pattern problems.",
   "binary-search": "Master search-space reduction and binary search patterns.",
+  "two-pointers": "Solve array and string problems using pointer-based techniques.",
+  stack: "Learn LIFO structures and monotonic-stack techniques.",
+  "sliding-window": "Learn efficient techniques for subarray and substring problems.",
+  "linked-list": "Understand nodes, pointers, insertion, and deletion.",
+  trees: "Explore hierarchical data structures, traversal, and recursion.",
+  tries: "Practice prefix trees for fast string search and autocomplete.",
+  "heap-priority-queue": "Practice priority-based problems with heaps.",
+  backtracking: "Explore recursive search over all valid combinations.",
+  graphs: "Practice graph traversal, connectivity, and shortest paths.",
+  "advanced-graphs": "Tackle weighted graphs, shortest paths, and minimum spanning trees.",
+  "dp-1d": "Learn to break complex problems into reusable subproblems.",
+  intervals: "Practice merging, scheduling, and sweeping over ranges.",
+  greedy: "Build solutions by making locally optimal decisions.",
+  "dp-2d": "Extend dynamic programming to two-dimensional state spaces.",
+  "bit-manipulation": "Practice bitwise tricks and binary representations.",
+  "math-geometry": "Practice math, simulation, and matrix geometry problems.",
 };
 
-const COMING_SOON = [
-  { name: "Hashing", description: "Master hash tables, frequency counting, and fast lookups." },
-  {
-    name: "Two Pointers",
-    description: "Solve array and string problems using pointer-based techniques.",
-  },
-  {
-    name: "Sliding Window",
-    description: "Learn efficient techniques for subarray and substring problems.",
-  },
-  { name: "Linked Lists", description: "Understand nodes, pointers, insertion, and deletion." },
-  { name: "Stack & Queue", description: "Learn LIFO and FIFO structures and their applications." },
-  {
-    name: "Trees",
-    description: "Explore hierarchical data structures, traversal, and recursion.",
-  },
-  { name: "Graphs", description: "Practice graph traversal, connectivity, and shortest paths." },
-  {
-    name: "Dynamic Programming",
-    description: "Learn to break complex problems into reusable subproblems.",
-  },
-  { name: "Greedy", description: "Build solutions by making locally optimal decisions." },
-];
+const COMING_SOON: { name: string; description: string }[] = [];
 
 function topicTitle(slug: string) {
   return slug
