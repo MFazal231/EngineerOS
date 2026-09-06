@@ -94,7 +94,7 @@ export default async function DashboardPage({
 
       {user && <NextActionWidget userId={user.id} />}
 
-      <TodayMission />
+      {user && <TodayMission userId={user.id} />}
     </main>
   );
 }
