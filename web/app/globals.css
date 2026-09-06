@@ -138,94 +138,6 @@ body {
   display: none;
 }
 
-@media (max-width: 860px) {
-  .header {
-    padding: 0 20px;
-  }
-
-  .container {
-    padding: 0 20px;
-  }
-
-  .logo h1 {
-    font-size: 1rem;
-  }
-
-  .nav,
-  .header-actions {
-    display: none;
-  }
-
-  .mobile-menu-toggle {
-    display: flex;
-  }
-
-  .mobile-menu {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-
-    position: absolute;
-    top: 64px;
-    left: 0;
-    right: 0;
-
-    padding: 16px 20px 20px;
-
-    background: var(--background);
-    border-bottom: 1px solid var(--border);
-    box-shadow: var(--shadow-md);
-    z-index: 99;
-  }
-
-  .mobile-menu .search-box {
-    width: 100%;
-    margin-bottom: 10px;
-  }
-
-  .mobile-menu a {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-
-    padding: 12px 4px;
-
-    color: var(--text-light);
-    text-decoration: none;
-    font-size: 0.9rem;
-    font-weight: 500;
-
-    border-bottom: 1px solid var(--border);
-  }
-
-  .mobile-menu a.active {
-    color: var(--text);
-    font-weight: 600;
-  }
-
-  .mobile-menu-footer {
-    margin-top: 10px;
-  }
-
-  .mobile-menu-footer .profile-btn,
-  .mobile-menu-footer button {
-    width: 100%;
-    justify-content: center;
-  }
-
-  .stats {
-    flex-wrap: wrap;
-  }
-
-  .stat-card {
-    flex-basis: calc(50% - var(--spacing-md) / 2);
-  }
-
-  .mission-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
 /* ========================= */
 /* LOGO */
 /* ========================= */
@@ -2665,4 +2577,100 @@ input:focus-visible {
 .admin-delete-btn:disabled {
   opacity: 0.5;
   cursor: default;
+}
+
+/* ========================= */
+/* MOBILE HEADER & LAYOUT OVERRIDES */
+/* ========================= */
+
+/* This block must stay at the end of the file: it overrides base rules
+   (.nav, .header-actions, .stat-card, etc.) defined earlier, and CSS only
+   lets a later rule of equal specificity win, media condition or not.
+   Placed early, this whole block silently did nothing in production. */
+@media (max-width: 860px) {
+  .header {
+    padding: 0 20px;
+  }
+
+  .container {
+    padding: 0 20px;
+  }
+
+  .logo h1 {
+    font-size: 1rem;
+  }
+
+  .nav,
+  .header-actions {
+    display: none;
+  }
+
+  .mobile-menu-toggle {
+    display: flex;
+  }
+
+  .mobile-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+
+    position: absolute;
+    top: 64px;
+    left: 0;
+    right: 0;
+
+    padding: 16px 20px 20px;
+
+    background: var(--background);
+    border-bottom: 1px solid var(--border);
+    box-shadow: var(--shadow-md);
+    z-index: 99;
+  }
+
+  .mobile-menu .search-box {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  .mobile-menu a {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    padding: 12px 4px;
+
+    color: var(--text-light);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+
+    border-bottom: 1px solid var(--border);
+  }
+
+  .mobile-menu a.active {
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  .mobile-menu-footer {
+    margin-top: 10px;
+  }
+
+  .mobile-menu-footer .profile-btn,
+  .mobile-menu-footer button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .stats {
+    flex-wrap: wrap;
+  }
+
+  .stat-card {
+    flex-basis: calc(50% - var(--spacing-md) / 2);
+  }
+
+  .mission-grid {
+    grid-template-columns: 1fr;
+  }
 }
