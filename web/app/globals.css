@@ -235,6 +235,9 @@ body {
   align-items: center;
 
   gap: 10px;
+
+  color: var(--text);
+  text-decoration: none;
 }
 
 .logo-icon {
