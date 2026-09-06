@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { Rocket } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useState } from "react";
 
@@ -73,7 +74,7 @@ function AuthPageContent() {
     <div className="auth-page">
       <main className="auth-shell">
         <Link className="auth-brand" href="/">
-          🚀 Engineer<span>OS</span>
+          <Rocket size={17} strokeWidth={2.25} /> Engineer<span>OS</span>
         </Link>
 
         <section className="auth-card" aria-labelledby="authTitle">

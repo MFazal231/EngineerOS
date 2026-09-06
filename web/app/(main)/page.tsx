@@ -1,3 +1,4 @@
+import { CheckCircle2, Clock, Code2, BookOpen, Flame } from "lucide-react";
 import { getSessionUser } from "@/lib/auth";
 import { Greeting } from "@/app/components/Greeting";
 import { NextActionWidget } from "@/app/components/NextActionWidget";
@@ -18,16 +19,19 @@ export default async function DashboardPage({
           {verified && (
             <p
               style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
                 marginBottom: "16px",
                 padding: "12px 16px",
-                background: "#ecfdf5",
-                color: "#059669",
+                background: "var(--success-light)",
+                color: "var(--success)",
                 borderRadius: "var(--radius-sm)",
                 fontWeight: 600,
                 fontSize: "0.9rem",
               }}
             >
-              ✅ Email verified — welcome to EngineerOS!
+              <CheckCircle2 size={16} /> Email verified — welcome to EngineerOS!
             </p>
           )}
 
@@ -40,7 +44,9 @@ export default async function DashboardPage({
             <div className="stat-card orange">
               <div className="card-top" />
               <div className="card-content">
-                <span className="emoji">🔥</span>
+                <span className="emoji">
+                  <Flame size={22} />
+                </span>
                 <h3>15</h3>
                 <p>Coding Streak</p>
               </div>
@@ -49,7 +55,9 @@ export default async function DashboardPage({
             <div className="stat-card blue">
               <div className="card-top" />
               <div className="card-content">
-                <span className="emoji">📚</span>
+                <span className="emoji">
+                  <BookOpen size={22} />
+                </span>
                 <h3>3</h3>
                 <p>Learning Modules</p>
               </div>
@@ -58,7 +66,9 @@ export default async function DashboardPage({
             <div className="stat-card purple">
               <div className="card-top" />
               <div className="card-content">
-                <span className="emoji">💻</span>
+                <span className="emoji">
+                  <Code2 size={22} />
+                </span>
                 <h3>5</h3>
                 <p>Projects</p>
               </div>
@@ -67,7 +77,9 @@ export default async function DashboardPage({
             <div className="stat-card green">
               <div className="card-top" />
               <div className="card-content">
-                <span className="emoji">⏱</span>
+                <span className="emoji">
+                  <Clock size={22} />
+                </span>
                 <h3>18h</h3>
                 <p>This Week</p>
               </div>

@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import { CheckCircle2, FolderKanban, TrendingUp, Users } from "lucide-react";
 import { getSessionUser } from "@/lib/auth";
 import { isAdmin, getAdminOverview } from "@/lib/admin";
 
@@ -31,7 +32,9 @@ export default async function AdminPage() {
             <div className="stat-card blue">
               <div className="card-top" />
               <div className="card-content">
-                <span className="emoji">👤</span>
+                <span className="emoji">
+                  <Users size={22} />
+                </span>
                 <h3>{overview.userCount}</h3>
                 <p>Total Users</p>
               </div>
@@ -40,7 +43,9 @@ export default async function AdminPage() {
             <div className="stat-card green">
               <div className="card-top" />
               <div className="card-content">
-                <span className="emoji">✅</span>
+                <span className="emoji">
+                  <CheckCircle2 size={22} />
+                </span>
                 <h3>{overview.totalSolved}</h3>
                 <p>DSA Problems Solved</p>
               </div>
@@ -49,7 +54,9 @@ export default async function AdminPage() {
             <div className="stat-card orange">
               <div className="card-top" />
               <div className="card-content">
-                <span className="emoji">📈</span>
+                <span className="emoji">
+                  <TrendingUp size={22} />
+                </span>
                 <h3>{overview.totalProblems}</h3>
                 <p>DSA Status Changes Logged</p>
               </div>
@@ -58,7 +65,9 @@ export default async function AdminPage() {
             <div className="stat-card purple">
               <div className="card-top" />
               <div className="card-content">
-                <span className="emoji">💻</span>
+                <span className="emoji">
+                  <FolderKanban size={22} />
+                </span>
                 <h3>{overview.totalProjects}</h3>
                 <p>Projects Created</p>
               </div>

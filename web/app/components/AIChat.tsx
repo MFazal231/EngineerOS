@@ -1,5 +1,6 @@
 "use client";
 
+import { Send, Sparkles } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 
 type Message = { role: "user" | "assistant"; content: string };
@@ -56,6 +57,7 @@ export function AIChat() {
       <div className="ai-chat-messages" ref={listRef}>
         {messages.length === 0 && (
           <div className="ai-chat-empty">
+            <Sparkles size={22} style={{ marginBottom: 10 }} />
             <p>Ask about your progress, or try one of these:</p>
             <div className="ai-chat-suggestions">
               {SUGGESTIONS.map((s) => (
@@ -93,7 +95,7 @@ export function AIChat() {
           disabled={loading}
         />
         <button type="submit" disabled={loading || !input.trim()}>
-          Send
+          <Send size={15} />
         </button>
       </form>
     </div>

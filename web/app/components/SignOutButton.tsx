@@ -1,5 +1,6 @@
 "use client";
 
+import { User } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 export function SignOutButton() {
@@ -18,7 +19,7 @@ export function SignOutButton() {
       aria-label="Sign out of EngineerOS"
     >
       <span>Sign out</span>
-      <span>👤</span>
+      <User size={15} />
     </button>
   );
 }

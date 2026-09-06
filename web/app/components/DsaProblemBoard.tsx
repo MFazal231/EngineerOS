@@ -1,5 +1,6 @@
 "use client";
 
+import { ExternalLink, RotateCcw, Search } from "lucide-react";
 import { useMemo, useState } from "react";
 import type { DsaProblem, ProblemStatus } from "@/lib/dsa/problems";
 import type { TopicSlug } from "@/lib/dsa/topics";
@@ -109,7 +110,9 @@ export function DsaProblemBoard({
       </div>
 
       <div className="problem-search">
-        <span className="problem-search-icon">🔍</span>
+        <span className="problem-search-icon">
+          <Search size={15} />
+        </span>
         <input
           type="text"
           placeholder="Search problems..."
@@ -176,7 +179,7 @@ export function DsaProblemBoard({
           </div>
 
           <button className="reset-filters-btn" onClick={() => setFilters(DEFAULT_FILTERS)}>
-            Reset Filters
+            <RotateCcw size={13} /> Reset Filters
           </button>
         </div>
       </div>
@@ -221,7 +224,7 @@ export function DsaProblemBoard({
                   className="problem-solve-btn"
                   onClick={() => window.open(problem.url, "_blank")}
                 >
-                  Solve
+                  Solve <ExternalLink size={12} />
                 </button>
               </div>
             </article>

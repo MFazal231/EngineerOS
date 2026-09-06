@@ -1,5 +1,6 @@
 "use client";
 
+import { CheckCircle2, Pause, Play, Target } from "lucide-react";
 import { useEffect, useState } from "react";
 
 const STORAGE_KEY = "missionStates";
@@ -19,9 +20,9 @@ const MISSIONS = [
     title: "2 Binary Search Problems",
     estimate: "Estimated time: 40 minutes",
     meta: [
-      { cls: "practice", text: "🧩 Practice" },
-      { cls: "high", text: "🔴 High" },
-      { cls: "time", text: "⏱ 40 min" },
+      { cls: "practice", text: "Practice" },
+      { cls: "high", text: "High" },
+      { cls: "time", text: "40 min" },
     ],
   },
   {
@@ -29,9 +30,9 @@ const MISSIONS = [
     title: "EngineerOS Today's Mission",
     estimate: "Estimated time: 40 minutes",
     meta: [
-      { cls: "build", text: "💻 Project" },
-      { cls: "medium", text: "🟡 Medium Priority" },
-      { cls: "time", text: "⏱ 60 min" },
+      { cls: "build", text: "Project" },
+      { cls: "medium", text: "Medium Priority" },
+      { cls: "time", text: "60 min" },
     ],
   },
   {
@@ -39,9 +40,9 @@ const MISSIONS = [
     title: "JavaScript Fundamentals",
     estimate: "Estimated time: 40 minutes",
     meta: [
-      { cls: "learning", text: "📚 Learning" },
-      { cls: "medium", text: "🟡 Medium Priority" },
-      { cls: "time", text: "⏱ 30 min" },
+      { cls: "learning", text: "Learning" },
+      { cls: "medium", text: "Medium Priority" },
+      { cls: "time", text: "30 min" },
     ],
   },
   {
@@ -49,9 +50,9 @@ const MISSIONS = [
     title: "Commit & Push to GitHub",
     estimate: "Estimated time: 40 minutes",
     meta: [
-      { cls: "git", text: "🚀 GitHub" },
-      { cls: "low", text: "🟢 Low Priority" },
-      { cls: "time", text: "⏱ 10 min" },
+      { cls: "git", text: "GitHub" },
+      { cls: "low", text: "Low Priority" },
+      { cls: "time", text: "10 min" },
     ],
   },
 ];
@@ -155,7 +156,12 @@ export function TodayMission() {
     <section className="today-mission">
       <div className="container today-mission-container">
         <header className="mission-header">
-          <h2>🎯 Today&apos;s Mission</h2>
+          <h2
+            style={{ display: "flex", alignItems: "center", gap: 8 }}
+          >
+            <Target size={20} strokeWidth={2.25} />
+            Today&apos;s Mission
+          </h2>
           <p>Focus on what matters most today.</p>
         </header>
 
@@ -202,36 +208,45 @@ export function TodayMission() {
                     <div className="mission-actions">
                       <button
                         className="start-mission-btn"
-                        style={{ display: showStart ? "block" : "none" }}
+                        style={{ display: showStart ? "flex" : "none" }}
                         onClick={(e) => {
                           e.stopPropagation();
                           handleStart(index);
                         }}
                       >
-                        ▶ Start Mission
+                        <Play size={13} fill="currentColor" /> Start Mission
                       </button>
 
                       <button
                         className="pause-mission-btn"
-                        style={{ display: showPause ? "block" : "none" }}
+                        style={{ display: showPause ? "flex" : "none" }}
                         onClick={(e) => {
                           e.stopPropagation();
                           handlePause(index);
                         }}
                       >
-                        {state.status === "paused" ? "▶ Resume" : "⏸ Pause"}
+                        {state.status === "paused" ? (
+                          <>
+                            <Play size={13} fill="currentColor" /> Resume
+                          </>
+                        ) : (
+                          <>
+                            <Pause size={13} fill="currentColor" /> Pause
+                          </>
+                        )}
                       </button>
 
                       <button
                         className="complete-mission-btn"
-                        style={{ display: showComplete ? "block" : "none" }}
+                        style={{ display: showComplete ? "flex" : "none" }}
                         disabled={state.status === "completed"}
                         onClick={(e) => {
                           e.stopPropagation();
                           handleComplete(index);
                         }}
                       >
-                        {state.status === "completed" ? "✓ Completed" : "✓ Complete"}
+                        <CheckCircle2 size={13} />{" "}
+                        {state.status === "completed" ? "Completed" : "Complete"}
                       </button>
                     </div>
                   </div>
@@ -258,7 +273,9 @@ export function TodayMission() {
         </section>
 
         <div className="mission-complete-message" style={{ display: allComplete ? "block" : "none" }}>
-          <span>🎉</span>
+          <span>
+            <CheckCircle2 size={28} />
+          </span>
           <h3>Today&apos;s Mission Complete!</h3>
           <p>Great work. You completed everything planned for today.</p>
         </div>

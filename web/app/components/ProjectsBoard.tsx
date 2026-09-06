@@ -1,5 +1,6 @@
 "use client";
 
+import { Pencil, Plus, Trash2, X } from "lucide-react";
 import { useState } from "react";
 
 type ProjectStatus = "planning" | "active" | "completed";
@@ -16,10 +17,10 @@ type Project = {
   tasks: ProjectTask[];
 };
 
-const STATUS_META: Record<ProjectStatus, { icon: string; text: string }> = {
-  planning: { icon: "🟡", text: "Planning" },
-  active: { icon: "🔵", text: "Active" },
-  completed: { icon: "🟢", text: "Completed" },
+const STATUS_META: Record<ProjectStatus, { text: string }> = {
+  planning: { text: "Planning" },
+  active: { text: "Active" },
+  completed: { text: "Completed" },
 };
 
 const EMPTY_FORM = { name: "", description: "", status: "active" as ProjectStatus, tech: "", nextStep: "" };
@@ -158,7 +159,7 @@ export function ProjectsBoard({ initialProjects }: { initialProjects: Project[] 
               <p>Turn what you learn into things you can actually ship.</p>
             </div>
             <button className="new-project-btn" onClick={openCreateModal}>
-              + New Project
+              <Plus size={15} /> New Project
             </button>
           </div>
         </div>
@@ -176,9 +177,7 @@ export function ProjectsBoard({ initialProjects }: { initialProjects: Project[] 
               return (
                 <article className="project-card" key={project.id}>
                   <div className="project-card-header">
-                    <span className={`project-status ${project.status}`}>
-                      {meta.icon} {meta.text}
-                    </span>
+                    <span className={`project-status ${project.status}`}>{meta.text}</span>
                   </div>
 
                   <h3>{project.name}</h3>
@@ -225,7 +224,7 @@ export function ProjectsBoard({ initialProjects }: { initialProjects: Project[] 
                               className="project-task-delete"
                               onClick={() => deleteTask(project.id, task.id)}
                             >
-                              &times;
+                              <X size={14} />
                             </button>
                           </li>
                         ))
@@ -258,10 +257,10 @@ export function ProjectsBoard({ initialProjects }: { initialProjects: Project[] 
 
                   <div className="project-actions">
                     <button className="project-edit-btn" onClick={() => openEditModal(project)}>
-                      Edit
+                      <Pencil size={13} /> Edit
                     </button>
                     <button className="project-delete-btn" onClick={() => handleDelete(project.id)}>
-                      Delete
+                      <Trash2 size={13} /> Delete
                     </button>
                   </div>
                 </article>
@@ -279,7 +278,7 @@ export function ProjectsBoard({ initialProjects }: { initialProjects: Project[] 
               <h3>{editingId ? "Edit Project" : "New Project"}</h3>
             </div>
             <button className="modal-close" onClick={() => setModalOpen(false)}>
-              &times;
+              <X size={20} />
             </button>
           </div>
 
@@ -314,9 +313,9 @@ export function ProjectsBoard({ initialProjects }: { initialProjects: Project[] 
                 value={form.status}
                 onChange={(e) => setForm((f) => ({ ...f, status: e.target.value as ProjectStatus }))}
               >
-                <option value="planning">🟡 Planning</option>
-                <option value="active">🔵 Active</option>
-                <option value="completed">🟢 Completed</option>
+                <option value="planning">Planning</option>
+                <option value="active">Active</option>
+                <option value="completed">Completed</option>
               </select>
             </div>
 

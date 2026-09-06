@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 import { getSessionUser } from "@/lib/auth";
 import { DSA_TOPICS, TOPIC_SLUGS, type TopicSlug } from "@/lib/dsa/topics";
 import { getUserProgressMap, computeTopicStats, computeOverallStats, computeContinuePractice } from "@/lib/dsa/progress";
@@ -112,7 +113,7 @@ export default async function DsaOverviewPage() {
                     </span>
                   </div>
                   <Link href={`/dsa/${continuePractice.topic}`} className="dsa-continue-action">
-                    Continue →
+                    Continue <ArrowRight size={14} />
                   </Link>
                 </>
               ) : (
@@ -150,7 +151,9 @@ export default async function DsaOverviewPage() {
                     </span>
                   </div>
 
-                  <span className="topic-action">Open Topic →</span>
+                  <span className="topic-action">
+                    Open Topic <ArrowRight size={13} />
+                  </span>
                 </Link>
               );
             })}

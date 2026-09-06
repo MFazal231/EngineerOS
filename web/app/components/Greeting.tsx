@@ -10,13 +10,13 @@ export function Greeting({ name }: { name: string }) {
     let message: string;
 
     if (hour >= 5 && hour < 12) {
-      message = "🌅 Good Morning";
+      message = "Good morning";
     } else if (hour >= 12 && hour < 18) {
-      message = "☀️ Good Afternoon";
+      message = "Good afternoon";
     } else if (hour >= 18 && hour < 21) {
-      message = "🌇 Good Evening";
+      message = "Good evening";
     } else {
-      message = "🌙 Good Night";
+      message = "Good night";
     }
 
     // Server can't know the visitor's local time; set after mount to avoid an SSR/client mismatch.
