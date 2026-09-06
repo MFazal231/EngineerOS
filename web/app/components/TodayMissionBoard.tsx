@@ -1,6 +1,6 @@
 "use client";
 
-import { CheckCircle2, Pause, Play } from "lucide-react";
+import { BookOpen, CheckCircle2, Code2, Flame, GitBranch, Pause, Play } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { Mission } from "@/lib/missions";
@@ -11,8 +11,14 @@ type LocalState = {
   completed: boolean;
   elapsedSeconds: number;
   status: TimerStatus;
-  expanded: boolean;
   pending: boolean;
+};
+
+const CATEGORY: Record<string, { color: string; Icon: typeof Flame }> = {
+  dsa: { color: "orange", Icon: Flame },
+  learning: { color: "blue", Icon: BookOpen },
+  build: { color: "purple", Icon: Code2 },
+  git: { color: "green", Icon: GitBranch },
 };
 
 function todayKey() {
@@ -44,7 +50,7 @@ function defaultState(mission: Mission): LocalState {
     }
   }
 
-  return { completed, elapsedSeconds, status: "not-started", expanded: false, pending: false };
+  return { completed, elapsedSeconds, status: "not-started", pending: false };
 }
 
 function formatTime(seconds: number) {
@@ -137,7 +143,7 @@ export function TodayMissionBoard({ missions }: { missions: Mission[] }) {
 
   return (
     <>
-      <ul className="mission-list">
+      <div className="mission-grid">
         {missions.map((mission) => {
           const state = states[mission.key];
           if (!state) return null;
@@ -145,112 +151,97 @@ export function TodayMissionBoard({ missions }: { missions: Mission[] }) {
           const showStart = state.status === "not-started" && !state.completed;
           const showPause = state.status === "running" || (state.status === "paused" && !state.completed);
           const trackable = mission.action !== null || mission.key === "git";
+          const { color, Icon } = CATEGORY[mission.key] ?? CATEGORY.git;
 
           return (
-            <li
-              key={mission.key}
-              className={`mission-card${state.expanded ? " expanded" : ""}${state.completed ? " completed" : ""}`}
-              onClick={() => update(mission.key, { expanded: !state.expanded })}
-            >
-              <div className="mission-label">
-                {trackable ? (
-                  <input
-                    type="checkbox"
-                    checked={state.completed}
-                    disabled={state.pending}
-                    onClick={(e) => e.stopPropagation()}
-                    onChange={(e) => toggleComplete(mission, e.target.checked)}
-                  />
-                ) : (
-                  <span style={{ width: 18 }} />
+            <div key={mission.key} className={`mission-card ${color}${state.completed ? " completed" : ""}`}>
+              <div className="card-top" />
+              <div className="mission-card-content">
+                <div className="mission-card-header">
+                  <span className="mission-icon">
+                    <Icon size={17} />
+                  </span>
+                  <p className="mission-label-text">{mission.label}</p>
+                  {trackable && (
+                    <input
+                      type="checkbox"
+                      className="mission-checkbox"
+                      checked={state.completed}
+                      disabled={state.pending}
+                      onChange={(e) => toggleComplete(mission, e.target.checked)}
+                    />
+                  )}
+                </div>
+
+                <h3>{mission.title}</h3>
+
+                <div className="mission-meta">
+                  {mission.meta.map((tag) => (
+                    <span key={tag.cls + tag.text} className={`meta-tag ${tag.cls}`}>
+                      {tag.text}
+                    </span>
+                  ))}
+                </div>
+
+                {trackable && (
+                  <div className="mission-timer">
+                    <span>{formatTime(state.elapsedSeconds)}</span>
+                  </div>
                 )}
 
-                <div className="mission-content">
-                  <p className="mission-label-text">{mission.label}</p>
-                  <h3>{mission.title}</h3>
-                  <div className="mission-meta">
-                    {mission.meta.map((tag) => (
-                      <span key={tag.cls + tag.text} className={`meta-tag ${tag.cls}`}>
-                        {tag.text}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              <div className="mission-details">
-                <div className="mission-details-content">
-                  {!trackable ? (
-                    <div className="mission-actions">
-                      <a className="problem-solve-btn" href={mission.href} onClick={(e) => e.stopPropagation()}>
-                        Open
-                      </a>
-                    </div>
-                  ) : (
+                <div className="mission-actions">
+                  {trackable ? (
                     <>
-                      <div className="mission-timer">
-                        <span>{formatTime(state.elapsedSeconds)}</span>
-                      </div>
-                      <div className="mission-actions">
-                        <button
-                          className="start-mission-btn"
-                          style={{ display: showStart ? "flex" : "none" }}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            update(mission.key, { status: "running" });
-                          }}
-                        >
-                          <Play size={13} fill="currentColor" /> Start Mission
-                        </button>
+                      <button
+                        className="start-mission-btn"
+                        style={{ display: showStart ? "flex" : "none" }}
+                        onClick={() => update(mission.key, { status: "running" })}
+                      >
+                        <Play size={13} fill="currentColor" /> Start
+                      </button>
 
-                        <button
-                          className="pause-mission-btn"
-                          style={{ display: showPause ? "flex" : "none" }}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            update(mission.key, { status: state.status === "running" ? "paused" : "running" });
-                          }}
-                        >
-                          {state.status === "paused" ? (
-                            <>
-                              <Play size={13} fill="currentColor" /> Resume
-                            </>
-                          ) : (
-                            <>
-                              <Pause size={13} fill="currentColor" /> Pause
-                            </>
-                          )}
-                        </button>
-
-                        {mission.action !== null && (
-                          <a
-                            className="problem-solve-btn"
-                            href={mission.href}
-                            onClick={(e) => e.stopPropagation()}
-                          >
-                            Open
-                          </a>
+                      <button
+                        className="pause-mission-btn"
+                        style={{ display: showPause ? "flex" : "none" }}
+                        onClick={() => update(mission.key, { status: state.status === "running" ? "paused" : "running" })}
+                      >
+                        {state.status === "paused" ? (
+                          <>
+                            <Play size={13} fill="currentColor" /> Resume
+                          </>
+                        ) : (
+                          <>
+                            <Pause size={13} fill="currentColor" /> Pause
+                          </>
                         )}
+                      </button>
 
-                        <button
-                          className="complete-mission-btn"
-                          disabled={state.completed || state.pending}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            toggleComplete(mission, true);
-                          }}
-                        >
-                          <CheckCircle2 size={13} /> {state.completed ? "Completed" : "Complete"}
-                        </button>
-                      </div>
+                      {mission.action !== null && (
+                        <a className="problem-solve-btn" href={mission.href}>
+                          Open
+                        </a>
+                      )}
+
+                      <button
+                        className="complete-mission-btn"
+                        style={{ display: "flex" }}
+                        disabled={state.completed || state.pending}
+                        onClick={() => toggleComplete(mission, true)}
+                      >
+                        <CheckCircle2 size={13} /> {state.completed ? "Completed" : "Complete"}
+                      </button>
                     </>
+                  ) : (
+                    <a className="problem-solve-btn" href={mission.href}>
+                      Open
+                    </a>
                   )}
                 </div>
               </div>
-            </li>
+            </div>
           );
         })}
-      </ul>
+      </div>
 
       <section className="mission-progress">
         <div className="progress-header">

@@ -220,6 +220,10 @@ body {
   .stat-card {
     flex-basis: calc(50% - var(--spacing-md) / 2);
   }
+
+  .mission-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* ========================= */
@@ -612,8 +616,18 @@ body {
   font-size: 0.9rem;
 }
 
-.mission-list {
-  list-style: none;
+.mission-grid {
+  display: grid;
+
+  grid-template-columns: repeat(2, 1fr);
+
+  gap: var(--spacing-md);
+}
+
+.mission-card {
+  display: flex;
+
+  flex-direction: column;
 
   background: var(--surface);
 
@@ -622,56 +636,72 @@ body {
   border-radius: var(--radius-md);
 
   overflow: hidden;
-}
 
-.mission-card {
-  border-bottom: 1px solid var(--border);
-  transition: background-color var(--ease);
-  cursor: pointer;
+  transition:
+    border-color var(--ease),
+    transform var(--ease);
 }
 
 .mission-card:hover {
-  background: var(--surface-2);
+  border-color: var(--border-hover);
+
+  transform: translateY(-2px);
 }
 
-.mission-card:last-child {
-  border-bottom: none;
-}
-
-.mission-label {
+.mission-card-content {
   display: flex;
 
-  align-items: flex-start;
+  flex: 1;
 
-  gap: var(--spacing-md);
+  flex-direction: column;
 
-  padding: 18px 24px;
+  gap: 10px;
 
-  cursor: pointer;
-
-  transition: background-color var(--ease);
+  padding: 18px 20px;
 }
 
-.mission-label input {
+.mission-card-header {
+  display: flex;
+
+  align-items: center;
+
+  gap: 8px;
+}
+
+.mission-icon {
+  display: flex;
+}
+
+.orange .mission-icon {
+  color: var(--orange);
+}
+
+.blue .mission-icon {
+  color: var(--blue);
+}
+
+.purple .mission-icon {
+  color: var(--purple);
+}
+
+.green .mission-icon {
+  color: var(--green);
+}
+
+.mission-card-header .mission-label-text {
+  flex: 1;
+}
+
+.mission-checkbox {
   width: 18px;
 
   height: 18px;
-
-  margin-top: 4px;
 
   cursor: pointer;
 
   flex-shrink: 0;
 
   accent-color: var(--primary);
-}
-
-.mission-content {
-  display: flex;
-
-  flex-direction: column;
-
-  cursor: pointer;
 }
 
 .mission-label-text {
@@ -686,56 +716,10 @@ body {
   letter-spacing: 0.06em;
 }
 
-.mission-content h3 {
+.mission-card-content h3 {
   font-size: 1.05rem;
 
   font-weight: 600;
-
-  margin: 4px 0 10px;
-}
-
-/* ========================= */
-/* MISSION DETAILS */
-/* ========================= */
-
-.mission-details {
-  max-height: 0;
-
-  overflow: hidden;
-
-  padding: 0 24px;
-
-  background: var(--surface-2);
-
-  border-top: 1px solid transparent;
-
-  opacity: 0;
-
-  transition:
-    max-height 0.3s ease,
-    padding 0.3s ease,
-    opacity 0.2s ease,
-    border-color 0.3s ease;
-}
-
-.mission-card.expanded .mission-details {
-  max-height: 200px;
-
-  padding: 18px 24px 22px;
-
-  border-top-color: var(--border);
-
-  opacity: 1;
-}
-
-.mission-details p {
-  margin-bottom: 14px;
-
-  color: var(--text-light);
-
-  font-size: 0.85rem;
-
-  font-weight: 500;
 }
 
 .start-mission-btn {
@@ -773,9 +757,7 @@ body {
 
   justify-content: center;
 
-  margin-bottom: 16px;
-
-  padding: 10px;
+  padding: 8px;
 
   background: var(--background);
 
@@ -804,13 +786,16 @@ body {
   display: flex;
 
   gap: 10px;
+
+  margin-top: auto;
 }
 
 /* ========================= */
 /* MISSION ACTION BUTTONS */
 /* ========================= */
 
-.mission-actions button {
+.mission-actions button,
+.mission-actions a {
   flex: 1;
 
   display: flex;
@@ -820,26 +805,45 @@ body {
 
   border: none;
 
-  padding: 9px 16px;
+  padding: 9px 12px;
 
   border-radius: var(--radius-sm);
 
-  font-size: 0.85rem;
+  font-size: 0.8rem;
 
   font-weight: 600;
 
   cursor: pointer;
 
   transition: background-color var(--ease);
+
+  white-space: nowrap;
 }
 
 /* ========================= */
 /* PAUSE & COMPLETE */
 /* ========================= */
 
-.pause-mission-btn,
-.complete-mission-btn {
+.pause-mission-btn {
   display: none;
+}
+
+.complete-mission-btn {
+  background: var(--surface-2);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+.complete-mission-btn:hover:not(:disabled) {
+  background: var(--success-light);
+  color: var(--success);
+  border-color: var(--success);
+}
+
+.complete-mission-btn:disabled {
+  background: var(--success-light);
+  color: var(--success);
+  cursor: default;
 }
 
 .mission-meta {
