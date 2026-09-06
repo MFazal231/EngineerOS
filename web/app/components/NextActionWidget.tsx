@@ -8,17 +8,19 @@ export async function NextActionWidget({ userId }: { userId: number }) {
 
   return (
     <section className="next-action">
-      <p className="next-action-label">
-        <Sparkles size={12} /> AI ENGINEER · WHAT TO DO NEXT
-      </p>
-      <div className="next-action-card">
-        <div className="next-action-info">
-          <h3 className="next-action-headline">{action.headline}</h3>
-          <span className="next-action-reason">{action.reason}</span>
+      <div className="container">
+        <p className="next-action-label">
+          <Sparkles size={12} /> AI ENGINEER · WHAT TO DO NEXT
+        </p>
+        <div className="next-action-card">
+          <div className="next-action-info">
+            <h3 className="next-action-headline">{action.headline}</h3>
+            <span className="next-action-reason">{action.reason}</span>
+          </div>
+          <Link href={action.actionHref} className="next-action-cta">
+            {action.actionLabel} <ArrowRight size={14} />
+          </Link>
         </div>
-        <Link href={action.actionHref} className="next-action-cta">
-          {action.actionLabel} <ArrowRight size={14} />
-        </Link>
       </div>
     </section>
   );
