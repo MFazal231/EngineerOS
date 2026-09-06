@@ -2,7 +2,6 @@
 
 import { BookOpen, CheckCircle2, Code2, Flame, GitBranch, Pause, Play } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import type { Mission } from "@/lib/missions";
 
 type TimerStatus = "not-started" | "running" | "paused";
@@ -78,7 +77,6 @@ async function markMission(mission: Mission, complete: boolean) {
 }
 
 export function TodayMissionBoard({ missions }: { missions: Mission[] }) {
-  const router = useRouter();
   const [states, setStates] = useState<Record<string, LocalState>>(() =>
     Object.fromEntries(missions.map((m) => [m.key, defaultState(m)])),
   );
@@ -134,7 +132,7 @@ export function TodayMissionBoard({ missions }: { missions: Mission[] }) {
 
     update(mission.key, { pending: true });
     await markMission(mission, checked);
-    router.refresh();
+    update(mission.key, { completed: checked, pending: false, status: checked ? "paused" : "not-started" });
   }
 
   const totalMissions = missions.length;
