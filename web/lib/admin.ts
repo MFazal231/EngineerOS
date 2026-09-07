@@ -5,6 +5,28 @@ export async function isAdmin(userId: number): Promise<boolean> {
   return user?.isAdmin ?? false;
 }
 
+export async function getRecentFeedback(limit = 50) {
+  const rows = await prisma.feedback.findMany({
+    orderBy: { createdAt: "desc" },
+    take: limit,
+    select: {
+      id: true,
+      message: true,
+      page: true,
+      createdAt: true,
+      user: { select: { name: true, email: true } },
+    },
+  });
+
+  return rows.map((row) => ({
+    id: row.id,
+    message: row.message,
+    page: row.page,
+    createdAt: row.createdAt,
+    from: row.user ? `${row.user.name} (${row.user.email})` : "Signed out",
+  }));
+}
+
 export async function getAdminOverview() {
   const [users, totalSolved, totalProblems, totalProjects] = await Promise.all([
     prisma.user.findMany({

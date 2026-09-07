@@ -20,8 +20,36 @@ model User {
 
   dsaProgress DsaProblemProgress[]
   projects    Project[]
+  aiUsage     AiUsage[]
+  feedback    Feedback[]
 
   @@map("users")
+}
+
+/// One row per user per day, counting AI calls so a single person can't
+/// exhaust the shared provider quota for everyone else.
+model AiUsage {
+  id     Int    @id @default(autoincrement())
+  userId Int    @map("user_id")
+  day    String @db.VarChar(10)
+  count  Int    @default(0)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, day])
+  @@map("ai_usage")
+}
+
+model Feedback {
+  id        Int      @id @default(autoincrement())
+  userId    Int?     @map("user_id")
+  message   String
+  page      String?  @db.VarChar(200)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@map("feedback")
 }
 
 model DsaTopic {

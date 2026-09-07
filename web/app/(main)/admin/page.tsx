@@ -1,8 +1,9 @@
 import { notFound } from "next/navigation";
 import { CheckCircle2, FolderKanban, TrendingUp, Users } from "lucide-react";
 import { getSessionUser } from "@/lib/auth";
-import { isAdmin, getAdminOverview } from "@/lib/admin";
+import { isAdmin, getAdminOverview, getRecentFeedback } from "@/lib/admin";
 import { AdminDeleteUserButton } from "@/app/components/AdminDeleteUserButton";
+import { AdminResetPasswordButton } from "@/app/components/AdminResetPasswordButton";
 
 export default async function AdminPage() {
   const user = await getSessionUser();
@@ -11,7 +12,7 @@ export default async function AdminPage() {
     notFound();
   }
 
-  const overview = await getAdminOverview();
+  const [overview, feedback] = await Promise.all([getAdminOverview(), getRecentFeedback()]);
 
   return (
     <main className="main">
@@ -96,13 +97,53 @@ export default async function AdminPage() {
                     <td>{u.solvedCount}</td>
                     <td>{u.projectCount}</td>
                     <td>
-                      {u.id !== user.id && <AdminDeleteUserButton userId={u.id} userName={u.name} />}
+                      <div className="admin-row-actions">
+                        <AdminResetPasswordButton userId={u.id} userName={u.name} />
+                        {u.id !== user.id && <AdminDeleteUserButton userId={u.id} userName={u.name} />}
+                      </div>
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
+
+          <div className="dsa-section-header" style={{ marginTop: 40 }}>
+            <div>
+              <p className="section-label">FEEDBACK</p>
+              <h3>What people are saying</h3>
+            </div>
+          </div>
+
+          {feedback.length === 0 ? (
+            <div className="problem-empty-state">
+              <strong>No feedback yet</strong>
+              <span>Anything sent through the in-app feedback button shows up here.</span>
+            </div>
+          ) : (
+            <div className="admin-table-wrap">
+              <table className="admin-table">
+                <thead>
+                  <tr>
+                    <th>From</th>
+                    <th>Message</th>
+                    <th>Page</th>
+                    <th>When</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {feedback.map((f) => (
+                    <tr key={f.id}>
+                      <td>{f.from}</td>
+                      <td style={{ whiteSpace: "normal", maxWidth: 420 }}>{f.message}</td>
+                      <td>{f.page ?? "—"}</td>
+                      <td>{f.createdAt.toLocaleString()}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
         </div>
       </section>
     </main>

@@ -6,8 +6,14 @@ function dateKey(d: Date): string {
   return d.toISOString().slice(0, 10);
 }
 
-function computeStreak(activityDates: Set<string>): number {
-  const today = new Date();
+/**
+ * Counts consecutive days of activity ending today. A day with no activity
+ * yet doesn't break the streak — only two empty days in a row do — so opening
+ * the app in the morning doesn't show yesterday's work wiped out.
+ * Exported for testing; `now` is injectable so tests don't depend on the clock.
+ */
+export function computeStreak(activityDates: Set<string>, now: Date = new Date()): number {
+  const today = new Date(now);
   today.setUTCHours(0, 0, 0, 0);
 
   const cursor = new Date(today);
