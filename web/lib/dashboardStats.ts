@@ -37,7 +37,7 @@ export async function getDashboardStats(userId: number) {
   const weekAgo = new Date();
   weekAgo.setDate(weekAgo.getDate() - 7);
 
-  const [progress, dsaRows, projects, tasks] = await Promise.all([
+  const [progress, dsaRows, projects, tasks, roadmapSteps] = await Promise.all([
     getUserProgressMap(userId),
     prisma.dsaProblemProgress.findMany({ where: { userId }, select: { updatedAt: true, status: true } }),
     prisma.project.findMany({ where: { userId }, select: { createdAt: true } }),
@@ -45,6 +45,7 @@ export async function getDashboardStats(userId: number) {
       where: { project: { userId } },
       select: { done: true, createdAt: true, updatedAt: true },
     }),
+    prisma.roadmapProgress.findMany({ where: { userId, done: true }, select: { updatedAt: true } }),
   ]);
 
   const learningModules = TOPIC_SLUGS.filter((slug) =>
@@ -59,13 +60,16 @@ export async function getDashboardStats(userId: number) {
     if (task.done) activityDates.add(dateKey(task.updatedAt));
   }
 
+  for (const step of roadmapSteps) activityDates.add(dateKey(step.updatedAt));
+
   const weeklyDsaSolved = dsaRows.filter((r) => r.status === "solved" && r.updatedAt >= weekAgo).length;
   const weeklyTasksDone = tasks.filter((t) => t.done && t.updatedAt >= weekAgo).length;
+  const weeklyRoadmapSteps = roadmapSteps.filter((s) => s.updatedAt >= weekAgo).length;
 
   return {
     codingStreak: computeStreak(activityDates),
     learningModules,
     projectsCount: projects.length,
-    weeklyActions: weeklyDsaSolved + weeklyTasksDone,
+    weeklyActions: weeklyDsaSolved + weeklyTasksDone + weeklyRoadmapSteps,
   };
 }

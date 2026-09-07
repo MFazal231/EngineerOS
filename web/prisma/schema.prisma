@@ -22,8 +22,24 @@ model User {
   projects    Project[]
   aiUsage     AiUsage[]
   feedback    Feedback[]
+  roadmapProgress RoadmapProgress[]
 
   @@map("users")
+}
+
+/// Roadmap content itself lives in code (lib/roadmaps/content.ts), the same
+/// way DSA problems do — this only records which steps a user has ticked off.
+model RoadmapProgress {
+  userId      Int      @map("user_id")
+  roadmapSlug String   @map("roadmap_slug") @db.VarChar(100)
+  stepId      String   @map("step_id") @db.VarChar(120)
+  done        Boolean  @default(false)
+  updatedAt   DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([userId, roadmapSlug, stepId])
+  @@map("roadmap_progress")
 }
 
 /// One row per user per day, counting AI calls so a single person can't

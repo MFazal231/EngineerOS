@@ -19,8 +19,8 @@ export function HeaderNav({ userName }: { userName: string | null }) {
         </NavLink>
         <NavLink href="/projects">Projects</NavLink>
         <NavLink href="/dsa">DSA</NavLink>
-        {/* Roadmap and Community have no real page yet - re-enable once built.
-        <a href="#">Roadmap</a>
+        <NavLink href="/roadmap">Roadmap</NavLink>
+        {/* Community has no real page yet - re-enable once built.
         <a href="#">Community</a>
         */}
       </nav>
@@ -84,8 +84,10 @@ export function HeaderNav({ userName }: { userName: string | null }) {
           <NavLink href="/dsa" onClick={() => setOpen(false)}>
             DSA
           </NavLink>
-          {/* Roadmap and Community have no real page yet - re-enable once built.
-          <a href="#">Roadmap</a>
+          <NavLink href="/roadmap" onClick={() => setOpen(false)}>
+            Roadmap
+          </NavLink>
+          {/* Community has no real page yet - re-enable once built.
           <a href="#">Community</a>
           */}
 
