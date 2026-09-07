@@ -2,6 +2,7 @@ import { CheckCircle2, Clock, Code2, BookOpen, Flame } from "lucide-react";
 import { getSessionUser } from "@/lib/auth";
 import { getDashboardStats } from "@/lib/dashboardStats";
 import { Greeting } from "@/app/components/Greeting";
+import { Landing } from "@/app/components/Landing";
 import { NextActionWidget } from "@/app/components/NextActionWidget";
 import { TodayMission } from "@/app/components/TodayMission";
 
@@ -12,9 +13,15 @@ export default async function DashboardPage({
 }) {
   const user = await getSessionUser();
   const { verified } = await searchParams;
-  const stats = user
-    ? await getDashboardStats(user.id)
-    : { codingStreak: 0, learningModules: 0, projectsCount: 0, weeklyActions: 0 };
+
+  // Signed out, this used to render an empty dashboard — a greeting to nobody
+  // above four zeros, with no hint of what the product is. Anyone opening a
+  // shared link landed there.
+  if (!user) {
+    return <Landing />;
+  }
+
+  const stats = await getDashboardStats(user.id);
 
   return (
     <main className="main">
@@ -40,7 +47,7 @@ export default async function DashboardPage({
           )}
 
           <div className="hero-content">
-            <Greeting name={user?.name ?? "there"} />
+            <Greeting name={user.name} />
             <p>Keep building. Every commit counts.</p>
           </div>
 
@@ -92,9 +99,9 @@ export default async function DashboardPage({
         </div>
       </section>
 
-      {user && <NextActionWidget userId={user.id} />}
+      <NextActionWidget userId={user.id} />
 
-      {user && <TodayMission userId={user.id} />}
+      <TodayMission userId={user.id} />
     </main>
   );
 }
