@@ -2698,10 +2698,14 @@ input:focus-visible {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: var(--spacing-md);
-  align-items: start;
 }
 
+/* Cards stretch to match the tallest in their row — taglines wrap to
+   different line counts, and ragged card bottoms look like a bug. */
 .roadmap-card {
+  display: flex;
+  flex-direction: column;
+
   overflow: hidden;
 
   background: var(--surface);
@@ -2727,6 +2731,10 @@ input:focus-visible {
   justify-content: space-between;
   gap: 16px;
   width: 100%;
+
+  /* Absorbs the extra height from stretching, keeping the progress bar
+     flush to the card's bottom edge rather than floating mid-card. */
+  flex: 1;
 
   padding: 20px 22px 16px;
 
