@@ -2830,13 +2830,16 @@ input:focus-visible {
   padding: 8px 22px 24px;
 }
 
-.map-stage {
-  padding-top: 22px;
+/* Every row shares the same lane column, so the dashed spine runs unbroken
+   from the first dot to the last — through stage headings included. */
+.map-row {
+  display: grid;
+  grid-template-columns: 40px 1fr;
+  gap: 16px;
 }
 
-.map-stage-head {
-  margin-bottom: 6px;
-  padding-left: 56px;
+.map-row-stage .map-stage-head {
+  padding: 22px 0 14px;
 }
 
 .map-stage-badge {
@@ -2919,16 +2922,6 @@ input:focus-visible {
 /* ========================= */
 /* THE MAP ITSELF */
 /* ========================= */
-
-.map-nodes {
-  list-style: none;
-}
-
-.map-node {
-  display: grid;
-  grid-template-columns: 40px 1fr;
-  gap: 16px;
-}
 
 /* The lane holds the dot and the connector that runs from it to the next
    dot. Stretching the connector is what keeps the path unbroken when steps
@@ -3538,7 +3531,7 @@ input:focus-visible {
     padding-left: 0;
   }
 
-  .map-node {
+  .map-row {
     grid-template-columns: 32px 1fr;
     gap: 12px;
   }

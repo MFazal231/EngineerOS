@@ -2,7 +2,32 @@
 
 import { Check, ChevronDown, ExternalLink, RotateCcw, Search } from "lucide-react";
 import { useMemo, useState } from "react";
-import type { Roadmap } from "@/lib/roadmaps/content";
+import type { Roadmap, RoadmapStage, RoadmapStep } from "@/lib/roadmaps/content";
+
+type MapRow =
+  | { kind: "stage"; stage: RoadmapStage; index: number }
+  | { kind: "step"; step: RoadmapStep; number: number };
+
+/**
+ * Flattens stages and steps into one list so the whole roadmap shares a single
+ * lane column. Kept separate per stage, the connector after a stage's last step
+ * had nothing to reach and just trailed off beside the next heading.
+ */
+function buildRows(roadmap: Roadmap): MapRow[] {
+  const rows: MapRow[] = [];
+  let number = 0;
+
+  roadmap.stages.forEach((stage, index) => {
+    rows.push({ kind: "stage", stage, index });
+
+    for (const step of stage.steps) {
+      number += 1;
+      rows.push({ kind: "step", step, number });
+    }
+  });
+
+  return rows;
+}
 
 type Props = {
   roadmaps: Roadmap[];
@@ -115,7 +140,6 @@ export function RoadmapBoard({ roadmaps, initialProgress, signedIn }: Props) {
           {filtered.map((roadmap) => {
             const open = openSlug === roadmap.slug;
             const stats = statsFor(roadmap);
-            let stepNumber = 0;
 
             return (
               <article
@@ -148,68 +172,76 @@ export function RoadmapBoard({ roadmaps, initialProgress, signedIn }: Props) {
 
                 {open && (
                   <div className="roadmap-map">
-                    {roadmap.stages.map((stage, stageIndex) => (
-                      <section key={stage.title} className="map-stage">
-                        <header className="map-stage-head">
-                          <span className="map-stage-badge">Stage {stageIndex + 1}</span>
-                          <h4>{stage.title}</h4>
-                          <p>{stage.summary}</p>
+                    {buildRows(roadmap).map((row, rowIndex, allRows) => {
+                      // One unbroken spine: the line keeps running through stage
+                      // headers, and stops dead at the final dot rather than
+                      // trailing off into nothing.
+                      const laterStep = allRows.slice(rowIndex + 1).some((r) => r.kind === "step");
+                      const earlierStep = allRows.slice(0, rowIndex).some((r) => r.kind === "step");
 
-                          <div className="map-resources">
-                            <span className="map-resources-label">Learn it from</span>
-                            {stage.resources.map((resource) => (
-                              <a
-                                key={resource.url}
-                                href={resource.url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="map-resource"
-                              >
-                                {resource.label}
-                                <em>{resource.note}</em>
-                                <ExternalLink size={11} />
-                              </a>
-                            ))}
-                          </div>
-                        </header>
+                      if (row.kind === "stage") {
+                        return (
+                          <div className="map-row map-row-stage" key={`stage-${row.index}`}>
+                            <div className="map-lane">
+                              {earlierStep && laterStep && <Connector bend={row.index % 2 === 0 ? -1 : 1} />}
+                            </div>
 
-                        <ol className="map-nodes">
-                          {stage.steps.map((step, stepIndex) => {
-                            const isDone = completed[roadmap.slug]?.has(step.id) ?? false;
-                            const isLast =
-                              stageIndex === roadmap.stages.length - 1 &&
-                              stepIndex === stage.steps.length - 1;
-                            stepNumber += 1;
+                            <header className="map-stage-head">
+                              <span className="map-stage-badge">Stage {row.index + 1}</span>
+                              <h4>{row.stage.title}</h4>
+                              <p>{row.stage.summary}</p>
 
-                            return (
-                              <li key={step.id} className={`map-node${isDone ? " done" : ""}`}>
-                                <div className="map-lane">
-                                  <button
-                                    className="map-dot"
-                                    onClick={() => toggleStep(roadmap.slug, step.id, !isDone)}
-                                    disabled={!signedIn}
-                                    aria-pressed={isDone}
-                                    aria-label={
-                                      isDone ? `Mark "${step.title}" not done` : `Mark "${step.title}" done`
-                                    }
-                                    title={signedIn ? "Mark this step" : "Sign in to track progress"}
+                              <div className="map-resources">
+                                <span className="map-resources-label">Learn it from</span>
+                                {row.stage.resources.map((resource) => (
+                                  <a
+                                    key={resource.url}
+                                    href={resource.url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="map-resource"
                                   >
-                                    {isDone ? <Check size={13} strokeWidth={3} /> : <span>{stepNumber}</span>}
-                                  </button>
+                                    {resource.label}
+                                    <em>{resource.note}</em>
+                                    <ExternalLink size={11} />
+                                  </a>
+                                ))}
+                              </div>
+                            </header>
+                          </div>
+                        );
+                      }
 
-                                  {!isLast && <Connector bend={stepIndex % 2 === 0 ? 1 : -1} />}
-                                </div>
+                      const isDone = completed[roadmap.slug]?.has(row.step.id) ?? false;
 
-                                <div className="map-node-body">
-                                  <strong>{step.title}</strong>
-                                  <p>{step.detail}</p>
-                                </div>
-                              </li>
-                            );
-                          })}
-                        </ol>
-                      </section>
-                    ))}
+                      return (
+                        <div className={`map-row map-node${isDone ? " done" : ""}`} key={row.step.id}>
+                          <div className="map-lane">
+                            <button
+                              className="map-dot"
+                              onClick={() => toggleStep(roadmap.slug, row.step.id, !isDone)}
+                              disabled={!signedIn}
+                              aria-pressed={isDone}
+                              aria-label={
+                                isDone
+                                  ? `Mark "${row.step.title}" not done`
+                                  : `Mark "${row.step.title}" done`
+                              }
+                              title={signedIn ? "Mark this step" : "Sign in to track progress"}
+                            >
+                              {isDone ? <Check size={13} strokeWidth={3} /> : <span>{row.number}</span>}
+                            </button>
+
+                            {laterStep && <Connector bend={row.number % 2 === 0 ? 1 : -1} />}
+                          </div>
+
+                          <div className="map-node-body">
+                            <strong>{row.step.title}</strong>
+                            <p>{row.step.detail}</p>
+                          </div>
+                        </div>
+                      );
+                    })}
 
                     <footer className="map-footer">
                       <h5>Certification</h5>
