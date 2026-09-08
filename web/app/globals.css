@@ -2639,6 +2639,238 @@ input:focus-visible {
 }
 
 /* ========================= */
+/* INSIGHTS */
+/* ========================= */
+
+.insight-panel {
+  padding: 22px 24px 20px;
+
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+}
+
+.insight-panel-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+
+  margin-bottom: 20px;
+}
+
+.insight-panel-head h3 {
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+.insight-chip {
+  padding: 5px 12px;
+
+  border-radius: 999px;
+  background: var(--primary-light);
+  color: var(--primary-text);
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.heatmap {
+  overflow-x: auto;
+}
+
+.heatmap-months,
+.heatmap-grid {
+  display: flex;
+  gap: 3px;
+  min-width: max-content;
+}
+
+.heatmap-months {
+  margin-bottom: 6px;
+}
+
+.heatmap-months span {
+  width: 13px;
+  color: var(--text-dim);
+  font-size: 0.65rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.heatmap-week {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.heatmap-cell {
+  width: 13px;
+  height: 13px;
+
+  border-radius: 3px;
+  background: var(--surface-2);
+}
+
+.heatmap-cell.empty {
+  background: transparent;
+}
+
+/* Steps rather than a gradient — one person's daily counts are small, and
+   distinct steps stay readable where a smooth ramp wouldn't. */
+.heatmap-cell.level-0 {
+  background: var(--surface-2);
+}
+
+.heatmap-cell.level-1 {
+  background: color-mix(in srgb, var(--primary) 30%, var(--surface-2));
+}
+
+.heatmap-cell.level-2 {
+  background: color-mix(in srgb, var(--primary) 55%, var(--surface-2));
+}
+
+.heatmap-cell.level-3 {
+  background: color-mix(in srgb, var(--primary) 78%, var(--surface-2));
+}
+
+.heatmap-cell.level-4 {
+  background: var(--primary);
+  box-shadow: 0 0 8px color-mix(in srgb, var(--primary) 55%, transparent);
+}
+
+.heatmap-legend {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 5px;
+
+  margin-top: 12px;
+
+  color: var(--text-dim);
+  font-size: 0.7rem;
+}
+
+.observation-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--spacing-md);
+}
+
+.observation {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+
+  padding: 18px 20px;
+
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--border-hover);
+  border-radius: var(--radius-md);
+
+  transition: border-color var(--ease);
+}
+
+.observation.good {
+  border-left-color: var(--success);
+}
+
+.observation.warning {
+  border-left-color: var(--warning);
+}
+
+.observation.neutral {
+  border-left-color: var(--primary);
+}
+
+.observation-icon {
+  display: flex;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.observation.good .observation-icon {
+  color: var(--success);
+}
+
+.observation.warning .observation-icon {
+  color: var(--warning);
+}
+
+.observation.neutral .observation-icon {
+  color: var(--primary-text);
+}
+
+.observation strong {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.observation p {
+  color: var(--text-light);
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
+
+.insight-timeline {
+  list-style: none;
+}
+
+.insight-timeline li {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+
+  padding: 12px 0 12px 4px;
+  border-bottom: 1px solid var(--border);
+}
+
+.insight-timeline li:last-child {
+  border-bottom: none;
+}
+
+.insight-timeline-dot {
+  width: 9px;
+  height: 9px;
+  margin-top: 6px;
+  flex-shrink: 0;
+
+  border-radius: 999px;
+  background: var(--text-dim);
+}
+
+.insight-timeline li.dsa .insight-timeline-dot {
+  background: var(--orange);
+  box-shadow: 0 0 8px color-mix(in srgb, var(--orange) 60%, transparent);
+}
+
+.insight-timeline li.project .insight-timeline-dot {
+  background: var(--purple);
+  box-shadow: 0 0 8px color-mix(in srgb, var(--purple) 60%, transparent);
+}
+
+.insight-timeline li.roadmap .insight-timeline-dot {
+  background: var(--green);
+  box-shadow: 0 0 8px color-mix(in srgb, var(--green) 60%, transparent);
+}
+
+.insight-timeline strong {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.insight-timeline span {
+  display: block;
+  margin-top: 2px;
+  color: var(--text-dim);
+  font-size: 0.78rem;
+}
+
+/* ========================= */
 /* ROADMAP */
 /* ========================= */
 
@@ -3516,6 +3748,10 @@ input:focus-visible {
   }
 
   .landing-feature-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .observation-grid {
     grid-template-columns: 1fr;
   }
 
