@@ -2808,117 +2808,293 @@ input:focus-visible {
   background: var(--green);
 }
 
-.roadmap-stages {
+/* Each card exposes its accent as a variable so dots, glow, and the dashed
+   connectors between them all pick up the same colour. */
+.roadmap-card.orange {
+  --accent: var(--orange);
+}
+
+.roadmap-card.blue {
+  --accent: var(--blue);
+}
+
+.roadmap-card.purple {
+  --accent: var(--purple);
+}
+
+.roadmap-card.green {
+  --accent: var(--green);
+}
+
+.roadmap-map {
+  padding: 8px 22px 24px;
+}
+
+.map-stage {
+  padding-top: 22px;
+}
+
+.map-stage-head {
+  margin-bottom: 6px;
+  padding-left: 56px;
+}
+
+.map-stage-badge {
+  display: inline-block;
+  margin-bottom: 8px;
+  padding: 3px 9px;
+
+  border-radius: 999px;
+  background: var(--surface-2);
+  color: var(--text-dim);
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.map-stage-head h4 {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.map-stage-head > p {
+  margin-top: 3px;
+  color: var(--text-light);
+  font-size: 0.85rem;
+}
+
+.map-resources {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+
+  margin-top: 12px;
+}
+
+.map-resources-label {
+  color: var(--text-dim);
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.map-resource {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  padding: 5px 10px;
+
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  color: var(--text);
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-decoration: none;
+
+  transition:
+    border-color var(--ease),
+    background-color var(--ease);
+}
+
+.map-resource:hover {
+  background: var(--surface-2);
+  border-color: var(--accent);
+}
+
+.map-resource em {
+  color: var(--text-dim);
+  font-size: 0.72rem;
+  font-style: normal;
+  font-weight: 500;
+}
+
+.map-resource svg {
+  color: var(--text-dim);
+}
+
+/* ========================= */
+/* THE MAP ITSELF */
+/* ========================= */
+
+.map-nodes {
+  list-style: none;
+}
+
+.map-node {
+  display: grid;
+  grid-template-columns: 40px 1fr;
+  gap: 16px;
+}
+
+/* The lane holds the dot and the connector that runs from it to the next
+   dot. Stretching the connector is what keeps the path unbroken when steps
+   have different amounts of text. */
+.map-lane {
   display: flex;
   flex-direction: column;
-  gap: 4px;
-
-  padding: 4px 22px 22px;
+  align-items: center;
 }
 
-.roadmap-stage {
-  padding-top: 20px;
-}
-
-.roadmap-stage-head {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-
-  margin-bottom: 12px;
-}
-
-.roadmap-stage-index {
+.map-dot {
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
 
-  width: 24px;
-  height: 24px;
+  width: 30px;
+  height: 30px;
 
+  border: 2px solid var(--border-hover);
   border-radius: 999px;
-  background: var(--surface-2);
-  color: var(--text-light);
+  background: var(--surface);
+  color: var(--text-dim);
   font-size: 0.75rem;
   font-weight: 700;
-}
-
-.roadmap-stage-head h4 {
-  font-size: 0.95rem;
-  font-weight: 600;
-}
-
-.roadmap-stage-head p {
-  margin-top: 2px;
-  color: var(--text-light);
-  font-size: 0.82rem;
-}
-
-.roadmap-steps {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-
-  margin-left: 36px;
-}
-
-.roadmap-steps li {
-  border-radius: var(--radius-sm);
-  transition: background-color var(--ease);
-}
-
-.roadmap-steps li:hover {
-  background: var(--surface-2);
-}
-
-.roadmap-steps label {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-
-  padding: 10px 12px;
-
   cursor: pointer;
+
+  transition:
+    border-color var(--ease),
+    color var(--ease),
+    background-color var(--ease),
+    box-shadow var(--ease);
 }
 
-.roadmap-steps input {
-  width: 16px;
-  height: 16px;
-  margin-top: 2px;
-  flex-shrink: 0;
-  cursor: pointer;
-  accent-color: var(--primary);
+.map-dot:hover:not(:disabled) {
+  border-color: var(--accent);
+  color: var(--accent);
 }
 
-.roadmap-steps input:disabled {
+.map-dot:disabled {
   cursor: default;
 }
 
-.roadmap-steps strong {
-  display: block;
-  font-size: 0.88rem;
-  font-weight: 500;
+/* The glow: a soft ring plus a wider bloom in the roadmap's own colour. */
+.map-node.done .map-dot {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--background);
+  box-shadow:
+    0 0 0 4px color-mix(in srgb, var(--accent) 18%, transparent),
+    0 0 16px 2px color-mix(in srgb, var(--accent) 45%, transparent);
 }
 
-.roadmap-steps em {
+.map-link {
+  flex: 1;
+  width: 40px;
+  min-height: 26px;
+
+  stroke: var(--border-hover);
+}
+
+.map-node.done .map-link {
+  stroke: color-mix(in srgb, var(--accent) 55%, transparent);
+}
+
+.map-node-body {
+  padding: 3px 0 22px;
+}
+
+.map-node-body strong {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.map-node-body p {
+  margin-top: 3px;
+  color: var(--text-light);
+  font-size: 0.82rem;
+  line-height: 1.55;
+}
+
+.map-node.done .map-node-body strong {
+  color: var(--text-light);
+  text-decoration: line-through;
+}
+
+/* ========================= */
+/* CERTIFICATION FOOTER */
+/* ========================= */
+
+.map-footer {
+  margin-top: 12px;
+  padding: 20px 22px;
+
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+}
+
+.map-footer h5 {
+  margin-bottom: 6px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.map-footer > p {
+  color: var(--text-light);
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
+
+.map-certs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+
+  margin-top: 14px;
+}
+
+.map-cert {
+  flex: 1 1 220px;
+
+  padding: 12px 14px;
+
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+
+  transition: border-color var(--ease);
+}
+
+.map-cert:hover {
+  border-color: var(--accent);
+}
+
+.map-cert strong {
+  display: block;
+  color: var(--text);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.map-cert span {
   display: block;
   margin-top: 2px;
-  color: var(--text-light);
-  font-size: 0.8rem;
-  font-style: normal;
-  line-height: 1.5;
+  color: var(--accent);
+  font-size: 0.76rem;
+  font-weight: 600;
 }
 
-.roadmap-steps li.done strong {
-  text-decoration: line-through;
-  color: var(--text-light);
+.map-cert em {
+  display: block;
+  margin-top: 4px;
+  color: var(--text-dim);
+  font-size: 0.75rem;
+  font-style: normal;
 }
 
 .roadmap-signin-note {
-  margin-top: 18px;
-  padding-top: 16px;
+  margin-top: 16px;
+  padding-top: 14px;
 
   border-top: 1px solid var(--border);
   color: var(--text-light);
@@ -3354,8 +3530,26 @@ input:focus-visible {
     grid-template-columns: 1fr;
   }
 
-  .roadmap-steps {
-    margin-left: 0;
+  .roadmap-map {
+    padding: 8px 14px 20px;
+  }
+
+  .map-stage-head {
+    padding-left: 0;
+  }
+
+  .map-node {
+    grid-template-columns: 32px 1fr;
+    gap: 12px;
+  }
+
+  .map-dot {
+    width: 26px;
+    height: 26px;
+  }
+
+  .map-link {
+    width: 32px;
   }
 
   .landing-footer-cta {

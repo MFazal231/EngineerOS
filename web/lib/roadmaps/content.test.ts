@@ -49,6 +49,43 @@ describe("roadmap data integrity", () => {
   });
 });
 
+describe("resources and certifications", () => {
+  // "Learn it from" is the whole point of the resource row — a stage without
+  // one tells someone what to do and then abandons them.
+  it("gives every stage at least one resource", () => {
+    for (const roadmap of ROADMAPS) {
+      for (const stage of roadmap.stages) {
+        expect(stage.resources.length, `${roadmap.slug} / ${stage.title}`).toBeGreaterThan(0);
+      }
+    }
+  });
+
+  it("uses https for every resource and certification link", () => {
+    for (const roadmap of ROADMAPS) {
+      for (const stage of roadmap.stages) {
+        for (const resource of stage.resources) {
+          expect(resource.url, resource.label).toMatch(/^https:\/\//);
+          expect(resource.label.trim()).not.toBe("");
+          expect(resource.note.trim()).not.toBe("");
+        }
+      }
+
+      for (const cert of roadmap.certifications) {
+        expect(cert.url, cert.name).toMatch(/^https:\/\//);
+        expect(cert.provider.trim()).not.toBe("");
+      }
+    }
+  });
+
+  // Empty certifications are allowed and honest, but the note explaining why
+  // must always be there — otherwise the section just looks broken.
+  it("always explains the certification situation, even when there are none", () => {
+    for (const roadmap of ROADMAPS) {
+      expect(roadmap.certificationNote.trim(), roadmap.slug).not.toBe("");
+    }
+  });
+});
+
 describe("searchRoadmaps", () => {
   it("returns everything for an empty query", () => {
     expect(searchRoadmaps("")).toHaveLength(ROADMAPS.length);
