@@ -1,8 +1,10 @@
 import Link from "next/link";
-import { AlertTriangle, Calendar, Clock, Flame, Sparkles, TrendingUp } from "lucide-react";
+import { AlertTriangle, Calendar, Clock, Flame, Snowflake, Sparkles, TrendingUp } from "lucide-react";
 import { getSessionUser } from "@/lib/auth";
 import { getInsights } from "@/lib/insights";
+import { getMilestones } from "@/lib/milestones";
 import { ActivityHeatmap } from "@/app/components/ActivityHeatmap";
+import { MilestoneGrid } from "@/app/components/MilestoneGrid";
 
 const TONE_ICON = {
   good: TrendingUp,
@@ -36,7 +38,7 @@ export default async function InsightsPage() {
     );
   }
 
-  const insights = await getInsights(user.id);
+  const [insights, milestones] = await Promise.all([getInsights(user.id), getMilestones(user.id)]);
 
   return (
     <main className="main">
@@ -66,6 +68,10 @@ export default async function InsightsPage() {
                 </span>
                 <h3>{insights.currentStreak}</h3>
                 <p>Current Streak</p>
+                <span className="stat-card-footnote" title="Freezes cover one missed day without breaking your streak">
+                  <Snowflake size={11} />
+                  {insights.freezesRemaining} left this month
+                </span>
               </div>
             </div>
 
@@ -115,6 +121,10 @@ export default async function InsightsPage() {
             </div>
 
             <ActivityHeatmap days={insights.heatmap} />
+          </div>
+
+          <div style={{ marginTop: 24 }}>
+            <MilestoneGrid milestones={milestones} />
           </div>
 
           <div className="dsa-section-header" style={{ marginTop: 40 }}>

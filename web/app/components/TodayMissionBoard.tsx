@@ -80,6 +80,10 @@ export function TodayMissionBoard({ missions }: { missions: Mission[] }) {
   const [states, setStates] = useState<Record<string, LocalState>>(() =>
     Object.fromEntries(missions.map((m) => [m.key, defaultState(m)])),
   );
+  // The one card allowed to play its completion flash right now, cleared on a
+  // timer so checking, unchecking, and rechecking the same mission can each
+  // trigger it again.
+  const [justCompleted, setJustCompleted] = useState<string | null>(null);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -117,7 +121,14 @@ export function TodayMissionBoard({ missions }: { missions: Mission[] }) {
     setStates((prev) => ({ ...prev, [key]: { ...prev[key], ...patch } }));
   }
 
+  function flashComplete(key: string) {
+    setJustCompleted(key);
+    setTimeout(() => setJustCompleted((current) => (current === key ? null : current)), 700);
+  }
+
   async function toggleComplete(mission: Mission, checked: boolean) {
+    if (checked) flashComplete(mission.key);
+
     if (mission.key === "git" || !mission.action) {
       update(mission.key, { completed: checked, status: checked ? "paused" : "not-started" });
       if (mission.key === "git") {
@@ -150,8 +161,13 @@ export function TodayMissionBoard({ missions }: { missions: Mission[] }) {
           const showPause = state.status === "running" || (state.status === "paused" && !state.completed);
           const { color, Icon } = CATEGORY[mission.key] ?? CATEGORY.git;
 
+          const popping = justCompleted === mission.key;
+
           return (
-            <div key={mission.key} className={`mission-card ${color}${state.completed ? " completed" : ""}`}>
+            <div
+              key={mission.key}
+              className={`mission-card ${color}${state.completed ? " completed" : ""}${popping ? " pop" : ""}`}
+            >
               <div className="card-top" />
               <div className="mission-card-content">
                 <div className="mission-card-header">

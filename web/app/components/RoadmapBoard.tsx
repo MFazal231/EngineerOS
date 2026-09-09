@@ -64,6 +64,10 @@ export function RoadmapBoard({ roadmaps, initialProgress, signedIn }: Props) {
   const [completed, setCompleted] = useState<Record<string, Set<string>>>(() =>
     Object.fromEntries(roadmaps.map((r) => [r.slug, new Set(initialProgress[r.slug] ?? [])])),
   );
+  // Tracks the one dot that should play its completion pop right now. Cleared
+  // on a timer rather than left permanent, so re-checking the same step later
+  // (uncheck, recheck) can trigger the animation again.
+  const [justCompleted, setJustCompleted] = useState<string | null>(null);
 
   const filtered = useMemo(() => {
     const term = query.trim().toLowerCase();
@@ -98,6 +102,11 @@ export function RoadmapBoard({ roadmaps, initialProgress, signedIn }: Props) {
       else set.delete(stepId);
       return { ...prev, [slug]: set };
     });
+
+    if (next) {
+      setJustCompleted(stepId);
+      setTimeout(() => setJustCompleted((current) => (current === stepId ? null : current)), 700);
+    }
 
     try {
       await fetch(`/api/roadmap/${slug}/steps/${stepId}`, {
@@ -213,12 +222,13 @@ export function RoadmapBoard({ roadmaps, initialProgress, signedIn }: Props) {
                       }
 
                       const isDone = completed[roadmap.slug]?.has(row.step.id) ?? false;
+                      const popping = justCompleted === row.step.id;
 
                       return (
                         <div className={`map-row map-node${isDone ? " done" : ""}`} key={row.step.id}>
                           <div className="map-lane">
                             <button
-                              className="map-dot"
+                              className={`map-dot${popping ? " pop" : ""}`}
                               onClick={() => toggleStep(roadmap.slug, row.step.id, !isDone)}
                               disabled={!signedIn}
                               aria-pressed={isDone}

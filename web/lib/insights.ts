@@ -1,12 +1,11 @@
 import { prisma } from "@/lib/prisma";
 import { DSA_TOPICS, type TopicSlug } from "@/lib/dsa/topics";
-import { ROADMAP_BY_SLUG } from "@/lib/roadmaps/content";
+import { computeStreak, FREEZES_PER_MONTH } from "@/lib/streaks";
+import { getActivityEvents, toActivityDates, type ActivityEvent } from "@/lib/activity";
 
 export const HEATMAP_DAYS = 119; // 17 weeks, so the grid comes out square-ish.
 
-export type ActivityKind = "dsa" | "project" | "roadmap";
-
-export type ActivityEvent = { at: Date; kind: ActivityKind; label: string };
+export type { ActivityEvent, ActivityKind } from "@/lib/activity";
 
 export type HeatmapDay = { date: string; count: number };
 
@@ -21,6 +20,8 @@ export type Insights = {
   totalActions: number;
   currentStreak: number;
   longestStreak: number;
+  freezesRemaining: number;
+  streakFrozen: boolean;
   activeDays: number;
   heatmap: HeatmapDay[];
   busiestWeekday: { day: string; count: number } | null;
@@ -76,95 +77,22 @@ function periodOf(hour: number): string {
   return "in the evening";
 }
 
-function computeStreaks(days: Set<string>, now: Date): { current: number; longest: number } {
-  if (days.size === 0) return { current: 0, longest: 0 };
-
-  const sorted = [...days].sort();
-  let longest = 1;
-  let run = 1;
-
-  for (let i = 1; i < sorted.length; i += 1) {
-    const prev = new Date(`${sorted[i - 1]}T00:00:00Z`);
-    const curr = new Date(`${sorted[i]}T00:00:00Z`);
-
-    if (daysBetween(curr, prev) === 1) {
-      run += 1;
-      longest = Math.max(longest, run);
-    } else {
-      run = 1;
-    }
-  }
-
-  // Current streak counts back from today, staying alive if yesterday counted.
-  const today = new Date(now);
-  today.setUTCHours(0, 0, 0, 0);
-  const cursor = new Date(today);
-
-  if (!days.has(dateKey(cursor))) {
-    cursor.setUTCDate(cursor.getUTCDate() - 1);
-    if (!days.has(dateKey(cursor))) return { current: 0, longest };
-  }
-
-  let current = 0;
-  while (days.has(dateKey(cursor))) {
-    current += 1;
-    cursor.setUTCDate(cursor.getUTCDate() - 1);
-  }
-
-  return { current, longest };
-}
-
 export async function getInsights(userId: number): Promise<Insights> {
   const now = new Date();
 
-  const [account, dsaRows, projects, tasks, roadmapRows] = await Promise.all([
+  const [account, events, dsaRows, projects, roadmapRows] = await Promise.all([
     prisma.user.findUnique({ where: { id: userId }, select: { timezone: true } }),
+    getActivityEvents(userId),
     prisma.dsaProblemProgress.findMany({
-      where: { userId },
-      select: { updatedAt: true, status: true, topicSlug: true, problemId: true },
+      where: { userId, status: "solved" },
+      select: { topicSlug: true },
     }),
     prisma.project.findMany({
       where: { userId },
       select: { id: true, name: true, createdAt: true, tasks: { select: { done: true, updatedAt: true } } },
     }),
-    prisma.projectTask.findMany({
-      where: { project: { userId } },
-      select: { title: true, done: true, updatedAt: true },
-    }),
-    prisma.roadmapProgress.findMany({
-      where: { userId, done: true },
-      select: { roadmapSlug: true, stepId: true, updatedAt: true },
-    }),
+    prisma.roadmapProgress.findMany({ where: { userId, done: true }, select: { roadmapSlug: true } }),
   ]);
-
-  const events: ActivityEvent[] = [];
-
-  for (const row of dsaRows) {
-    if (row.status !== "solved") continue;
-    const topic = DSA_TOPICS[row.topicSlug as TopicSlug];
-    const problem = topic?.problems.find((p) => p.id === row.problemId);
-    events.push({
-      at: row.updatedAt,
-      kind: "dsa",
-      label: problem ? `Solved ${problem.title}` : "Solved a problem",
-    });
-  }
-
-  for (const task of tasks) {
-    if (!task.done) continue;
-    events.push({ at: task.updatedAt, kind: "project", label: `Finished “${task.title}”` });
-  }
-
-  for (const row of roadmapRows) {
-    const roadmap = ROADMAP_BY_SLUG[row.roadmapSlug];
-    events.push({
-      at: row.updatedAt,
-      kind: "roadmap",
-      label: roadmap ? `Step done in ${roadmap.title}` : "Roadmap step done",
-    });
-  }
-
-  events.sort((a, b) => b.at.getTime() - a.at.getTime());
 
   const dayCounts = new Map<string, number>();
   const weekdayCounts = new Array(7).fill(0);
@@ -190,8 +118,8 @@ export async function getInsights(userId: number): Promise<Insights> {
     heatmap.push({ date: key, count: dayCounts.get(key) ?? 0 });
   }
 
-  const activeDaySet = new Set(dayCounts.keys());
-  const { current, longest } = computeStreaks(activeDaySet, now);
+  const activeDaySet = toActivityDates(events);
+  const { current, longest, freezesRemaining, frozenDates } = computeStreak(activeDaySet, now);
 
   const busiestWeekdayIndex = weekdayCounts.indexOf(Math.max(...weekdayCounts));
   const busiestWeekday =
@@ -204,7 +132,6 @@ export async function getInsights(userId: number): Promise<Insights> {
 
   const solvedByTopic = new Map<string, number>();
   for (const row of dsaRows) {
-    if (row.status !== "solved") continue;
     solvedByTopic.set(row.topicSlug, (solvedByTopic.get(row.topicSlug) ?? 0) + 1);
   }
 
@@ -218,12 +145,24 @@ export async function getInsights(userId: number): Promise<Insights> {
     totalActions: events.length,
     currentStreak: current,
     longestStreak: longest,
+    freezesRemaining,
+    streakFrozen: frozenDates.length > 0,
     activeDays: activeDaySet.size,
     heatmap,
     busiestWeekday,
     busiestPeriod,
     topTopic,
-    observations: buildObservations({ events, now, projects, dsaRows, roadmapRows, busiestWeekday, busiestPeriod, current, longest }),
+    observations: buildObservations({
+      events,
+      now,
+      projects,
+      roadmapRows,
+      busiestWeekday,
+      busiestPeriod,
+      current,
+      longest,
+      frozenDates,
+    }),
     recent: events.slice(0, 8),
   };
 }
@@ -232,12 +171,12 @@ type ObservationInput = {
   events: ActivityEvent[];
   now: Date;
   projects: { id: number; name: string; createdAt: Date; tasks: { done: boolean; updatedAt: Date }[] }[];
-  dsaRows: { updatedAt: Date; status: string; topicSlug: string }[];
-  roadmapRows: { roadmapSlug: string; updatedAt: Date }[];
+  roadmapRows: { roadmapSlug: string }[];
   busiestWeekday: Insights["busiestWeekday"];
   busiestPeriod: Insights["busiestPeriod"];
   current: number;
   longest: number;
+  frozenDates: string[];
 };
 
 /**
@@ -246,7 +185,7 @@ type ObservationInput = {
  * stored timestamps — nothing here is guessed or generic encouragement.
  */
 function buildObservations(input: ObservationInput): Observation[] {
-  const { events, now, projects, roadmapRows, busiestWeekday, busiestPeriod, current, longest } = input;
+  const { events, now, projects, roadmapRows, busiestWeekday, busiestPeriod, current, longest, frozenDates } = input;
   const out: Observation[] = [];
 
   if (events.length === 0) {
@@ -286,6 +225,15 @@ function buildObservations(input: ObservationInput): Observation[] {
       headline: "You're speeding up",
       detail: `${lastWeek} action${lastWeek === 1 ? "" : "s"} this week, up from ${weekBefore}. Whatever changed, it's working.`,
       tone: "good",
+    });
+  }
+
+  if (frozenDates.length > 0) {
+    const dayWord = frozenDates.length === 1 ? "day" : "days";
+    out.push({
+      headline: `A streak freeze covered ${frozenDates.length} missed ${dayWord}`,
+      detail: `You get ${FREEZES_PER_MONTH} a month for exactly this — a day you miss without losing what you built.`,
+      tone: "neutral",
     });
   }
 

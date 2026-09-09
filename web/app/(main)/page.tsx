@@ -1,4 +1,4 @@
-import { CheckCircle2, Clock, Code2, BookOpen, Flame } from "lucide-react";
+import { CheckCircle2, Clock, Code2, BookOpen, Flame, Snowflake } from "lucide-react";
 import { getSessionUser } from "@/lib/auth";
 import { getDashboardStats } from "@/lib/dashboardStats";
 import { Greeting } from "@/app/components/Greeting";
@@ -60,6 +60,10 @@ export default async function DashboardPage({
                 </span>
                 <h3>{stats.codingStreak}</h3>
                 <p>Coding Streak</p>
+                <span className="stat-card-footnote" title="Freezes cover one missed day without breaking your streak">
+                  <Snowflake size={11} />
+                  {stats.freezesRemaining} left this month
+                </span>
               </div>
             </div>
 
