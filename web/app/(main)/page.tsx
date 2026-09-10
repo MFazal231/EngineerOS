@@ -1,6 +1,7 @@
 import { CheckCircle2, Clock, Code2, BookOpen, Flame, Snowflake } from "lucide-react";
 import { getSessionUser } from "@/lib/auth";
 import { getDashboardStats } from "@/lib/dashboardStats";
+import { DailyChallenge } from "@/app/components/DailyChallenge";
 import { Greeting } from "@/app/components/Greeting";
 import { Landing } from "@/app/components/Landing";
 import { NextActionWidget } from "@/app/components/NextActionWidget";
@@ -102,6 +103,8 @@ export default async function DashboardPage({
           </div>
         </div>
       </section>
+
+      <DailyChallenge userId={user.id} />
 
       <NextActionWidget userId={user.id} />
 
